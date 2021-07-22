@@ -1,26 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Parse from 'parse'
 
-function App() {
+const PARSE_APPLICATION_ID = process.env.REACT_APP_APPLICATION_ID || ''
+const PARSE_HOST_URL = process.env.REACT_APP_API_BASE_URL || ''
+const PARSE_JAVASCRIPT_KEY = process.env.REACT_APP_API_KEY
+
+Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY)
+Parse.serverURL = PARSE_HOST_URL
+
+export function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <>
+      <header>Memories App V2</header>
 
-export default App;
+      <main></main>
+
+      <footer></footer>
+    </>
+  )
+}
