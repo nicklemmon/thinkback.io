@@ -1,18 +1,81 @@
-import Parse from 'parse'
-
-const PARSE_APPLICATION_ID = process.env.REACT_APP_APPLICATION_ID || ''
-const PARSE_HOST_URL = process.env.REACT_APP_API_BASE_URL || ''
-const PARSE_JAVASCRIPT_KEY = process.env.REACT_APP_API_KEY
-
-Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY)
-Parse.serverURL = PARSE_HOST_URL
+import { NavLink, Link } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import {
+  DashboardPage,
+  LandingPage,
+  LoginPage,
+  MemoriesPage,
+  ProfilePage,
+  SignUpPage,
+} from 'src/pages'
+import { useAuthMachine } from './hooks'
 
 export function App() {
+  const [state, send] = useAuthMachine()
+
+  console.log('state.value', state.value)
+
   return (
     <>
-      <header>Memories App V2</header>
+      <header>
+        <Link to={state.matches('authorized') ? '/dashboard' : '/auth'}>Memories App V2</Link>
 
-      <main></main>
+        {state.matches('authorized') ? (
+          <nav>
+            <ul>
+              <li>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/memories">Memories</NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/profile">Profile</NavLink>
+              </li>
+            </ul>
+
+            <button onClick={() => send({ type: 'LOG_OUT' })}>Log Out</button>
+          </nav>
+        ) : null}
+      </header>
+
+      <main>
+        <Switch>
+          <Route path="/" exact>
+            <LandingPage />
+          </Route>
+
+          <Route path="/auth">
+            <LoginPage
+              handleLogin={(submitEvent: { username: string; password: string }) =>
+                send({
+                  type: 'LOGIN',
+                  username: submitEvent.username,
+                  password: submitEvent.password,
+                })
+              }
+            />
+          </Route>
+
+          <Route path="/sign-up">
+            <SignUpPage />
+          </Route>
+
+          <Route path="/dashboard">
+            <DashboardPage />
+          </Route>
+
+          <Route path="/memories">
+            <MemoriesPage />
+          </Route>
+
+          <Route path="/profile">
+            <ProfilePage />
+          </Route>
+        </Switch>
+      </main>
 
       <footer></footer>
     </>
