@@ -1,10 +1,15 @@
 import { NavLink, Link } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import {
+  AddKidPage,
+  AddMemoryPage,
   DashboardPage,
+  KidDetailPage,
+  KidsPage,
   LandingPage,
   LoginPage,
   MemoriesPage,
+  MemoryDetailPage,
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
@@ -13,18 +18,20 @@ import { useAuthMachine } from './hooks'
 export function App() {
   const [state, send] = useAuthMachine()
 
-  console.log('state.value', state.value)
-
   return (
     <>
       <header>
-        <Link to={state.matches('authorized') ? '/dashboard' : '/auth'}>Memories App V2</Link>
+        <Link to={state.matches('authorized') ? '/dashboard' : '/auth'}>Memories App</Link>
 
         {state.matches('authorized') ? (
           <nav>
             <ul>
               <li>
                 <NavLink to="/dashboard">Dashboard</NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/kids">Kids</NavLink>
               </li>
 
               <li>
@@ -67,8 +74,28 @@ export function App() {
             <DashboardPage />
           </Route>
 
+          <Route path="/kids">
+            <KidsPage />
+          </Route>
+
+          <Route path="/kids/add">
+            <AddKidPage />
+          </Route>
+
+          <Route path="/kids/:id">
+            <KidDetailPage />
+          </Route>
+
           <Route path="/memories">
             <MemoriesPage />
+          </Route>
+
+          <Route path="/memories/add">
+            <AddMemoryPage />
+          </Route>
+
+          <Route path="/memories/:id">
+            <MemoryDetailPage />
           </Route>
 
           <Route path="/profile">

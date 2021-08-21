@@ -1,6 +1,6 @@
-import { Page } from 'src/components'
 import { useMachine } from '@xstate/react'
-import { memoriesPageMachine } from 'src/machines/memoriesPageMachine'
+import { Page } from 'src/components'
+import { memoriesPageMachine } from 'src/machines'
 
 export function MemoriesPage() {
   const [state, send] = useMachine(memoriesPageMachine)

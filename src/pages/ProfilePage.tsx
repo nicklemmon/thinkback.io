@@ -1,6 +1,6 @@
 import { Page } from 'src/components'
 import { useMachine } from '@xstate/react'
-import { profilePageMachine } from 'src/machines/profilePageMachine'
+import { profilePageMachine } from 'src/machines'
 
 export function ProfilePage() {
   const [state, send] = useMachine(profilePageMachine)

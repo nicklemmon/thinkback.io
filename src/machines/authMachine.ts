@@ -1,5 +1,5 @@
 import { createMachine, assign } from 'xstate'
-import Parse, { User } from 'parse'
+import Parse from 'parse'
 import { logIn, logOut } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 import { getCurrentUser } from 'src/helpers/user'
