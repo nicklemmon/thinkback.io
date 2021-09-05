@@ -5,8 +5,6 @@ import { profilePageMachine } from 'src/machines'
 export function ProfilePage() {
   const [state, send] = useMachine(profilePageMachine)
 
-  console.log('state', state)
-
   return (
     <Page>
       <Page.Title>Profile</Page.Title>

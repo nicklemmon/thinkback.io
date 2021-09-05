@@ -1,3 +1,5 @@
+export * from './addKidPageMachine'
 export * from './authMachine'
 export * from './memoriesPageMachine'
 export * from './profilePageMachine'
+export * from './toastMachine'

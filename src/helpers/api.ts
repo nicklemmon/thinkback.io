@@ -1,5 +1,5 @@
 import Parse from 'parse'
-import { ApiResponse, Memory, Username } from 'src/types'
+import { ApiResponse, Kid, Memory, Username } from 'src/types'
 import { getCurrentUser } from './user'
 
 export function signUp(username: Username, email: string, password: string) {
@@ -111,4 +111,19 @@ export function getUser(userId: string) {
 
 function parseResponse(res: ApiResponse) {
   return JSON.parse(JSON.stringify(res))
+}
+
+export async function createKid(kid: Kid) {
+  const { name } = kid
+  const Kid = Parse.Object.extend('Kid')
+  const object = new Kid()
+  const currentUser = getCurrentUser()
+
+  object.set('name', name)
+  object.setACL(currentUser)
+
+  return object
+    .save()
+    .then((res: ApiResponse) => res)
+    .catch((err: any) => err)
 }

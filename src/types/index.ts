@@ -24,3 +24,16 @@ export type User = {
   username: Username
   updatedAt?: string
 }
+
+export type Kid = {
+  name: string
+  objectId?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export type Toast = {
+  message: string
+  variant: 'success' | 'error'
+  id?: string
+}

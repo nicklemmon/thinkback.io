@@ -14,12 +14,14 @@ import {
   SignUpPage,
 } from 'src/pages'
 import { useAuthMachine } from './hooks'
+import { ToastDemoPage } from './pages/ToastDemoPage'
+import { Providers } from './Providers'
 
 export function App() {
   const [state, send] = useAuthMachine()
 
   return (
-    <>
+    <Providers>
       <header>
         <Link to={state.matches('authorized') ? '/dashboard' : '/auth'}>Memories App</Link>
 
@@ -40,6 +42,10 @@ export function App() {
 
               <li>
                 <NavLink to="/profile">Profile</NavLink>
+              </li>
+
+              <li>
+                <NavLink to="/toast-demo">Toast Demo</NavLink>
               </li>
             </ul>
 
@@ -74,7 +80,7 @@ export function App() {
             <DashboardPage />
           </Route>
 
-          <Route path="/kids">
+          <Route path="/kids" exact>
             <KidsPage />
           </Route>
 
@@ -86,7 +92,7 @@ export function App() {
             <KidDetailPage />
           </Route>
 
-          <Route path="/memories">
+          <Route path="/memories" exact>
             <MemoriesPage />
           </Route>
 
@@ -101,10 +107,15 @@ export function App() {
           <Route path="/profile">
             <ProfilePage />
           </Route>
+
+          {/* TODO: Remove this after testing */}
+          <Route path="/toast-demo">
+            <ToastDemoPage />
+          </Route>
         </Switch>
       </main>
 
       <footer></footer>
-    </>
+    </Providers>
   )
 }
