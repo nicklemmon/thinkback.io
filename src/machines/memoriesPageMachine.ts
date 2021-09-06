@@ -3,7 +3,7 @@ import { Memory } from 'src/types'
 import { getMemories } from 'src/helpers/api'
 
 type MemoriesPageMachineContext = {
-  memories: Array<Memory> | []
+  memories: Memory[] | []
   error: Object | undefined
 }
 

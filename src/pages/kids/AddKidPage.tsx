@@ -1,6 +1,7 @@
 import { useMachine } from '@xstate/react'
 import { ChangeEvent } from 'react'
-import { Form, Page } from 'src/components'
+import { Link } from 'react-router-dom'
+import { Form, Page, Toast } from 'src/components'
 import { addKidPageMachine } from 'src/machines'
 
 export function AddKidPage() {
@@ -18,8 +19,10 @@ export function AddKidPage() {
     <Page>
       <Page.Title>Add a Kid</Page.Title>
 
-      {state.matches('loading') && <p>Loading...</p>}
-      {state.matches('success') && <p>Added kid, whatever</p>}
+      <Link to="/kids">Back to Kids</Link>
+
+      {state.matches('success') && <Toast message="New kid successfully added" variant="success" />}
+
       {state.matches('error') && <p>Failed to add kid, whatever</p>}
 
       <Form onSubmit={handleSubmit}>
@@ -32,10 +35,13 @@ export function AddKidPage() {
             id="first-name"
             onChange={handleNameChange}
             value={state.context.kid.name}
+            disabled={state.matches('loading')}
           />
         </div>
 
-        <button type="submit">Add Kid</button>
+        <button type="submit" disabled={state.matches('loading')}>
+          Add Kid
+        </button>
       </Form>
     </Page>
   )

@@ -4,7 +4,7 @@ import {
   AddKidPage,
   AddMemoryPage,
   DashboardPage,
-  KidDetailPage,
+  KidDetailsPage,
   KidsPage,
   LandingPage,
   LoginPage,
@@ -13,8 +13,8 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
+import { ToastList } from 'src/components'
 import { useAuthMachine } from './hooks'
-import { ToastDemoPage } from './pages/ToastDemoPage'
 import { Providers } from './Providers'
 
 export function App() {
@@ -89,7 +89,7 @@ export function App() {
           </Route>
 
           <Route path="/kids/:id">
-            <KidDetailPage />
+            <KidDetailsPage />
           </Route>
 
           <Route path="/memories" exact>
@@ -107,12 +107,9 @@ export function App() {
           <Route path="/profile">
             <ProfilePage />
           </Route>
-
-          {/* TODO: Remove this after testing */}
-          <Route path="/toast-demo">
-            <ToastDemoPage />
-          </Route>
         </Switch>
+
+        <ToastList />
       </main>
 
       <footer></footer>

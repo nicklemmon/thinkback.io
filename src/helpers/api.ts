@@ -113,7 +113,21 @@ function parseResponse(res: ApiResponse) {
   return JSON.parse(JSON.stringify(res))
 }
 
-export async function createKid(kid: Kid) {
+export function getKids() {
+  const KidClass = Parse.Object.extend('Kid')
+  const query = new Parse.Query(KidClass)
+  const currentUser = getCurrentUser()
+  const sessionToken = currentUser?.get('sessionToken')
+
+  query.limit(1000)
+
+  return query
+    .find({ sessionToken })
+    .then(res => parseResponse(res))
+    .catch(err => err)
+}
+
+export function createKid(kid: Kid) {
   const { name } = kid
   const Kid = Parse.Object.extend('Kid')
   const object = new Kid()

@@ -23,7 +23,7 @@ type ToastContextParams =
       ) => void,
     ]
 
-const ToastContext = React.createContext<ToastContextParams>(undefined)
+export const ToastContext = React.createContext<ToastContextParams>(undefined)
 
 type ToastProviderProps = {
   children: React.ReactNode

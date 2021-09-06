@@ -17,6 +17,16 @@ type AddKidPageMachineSchema = {
 
 type AddKidPageMachineEvents = { type: 'NAME_CHANGE'; name: string } | { type: 'SUBMIT' }
 
+const sharedEventTransitions = {
+  NAME_CHANGE: {
+    actions: 'setNameToCtx',
+    target: 'editing',
+  },
+  SUBMIT: {
+    target: 'loading',
+  },
+}
+
 const addKidPageMachineConfig: MachineConfig<
   AddKidPageMachineContext,
   AddKidPageMachineSchema,
@@ -31,15 +41,7 @@ const addKidPageMachineConfig: MachineConfig<
   },
   states: {
     editing: {
-      on: {
-        NAME_CHANGE: {
-          actions: 'setNameToCtx',
-          target: 'editing',
-        },
-        SUBMIT: {
-          target: 'loading',
-        },
-      },
+      on: sharedEventTransitions,
     },
     loading: {
       invoke: {
@@ -52,8 +54,13 @@ const addKidPageMachineConfig: MachineConfig<
         },
       },
     },
-    success: {},
-    error: {},
+    success: {
+      entry: ['resetForm'],
+      on: sharedEventTransitions,
+    },
+    error: {
+      on: sharedEventTransitions,
+    },
   },
 }
 
@@ -64,6 +71,13 @@ const addKidPageMachineOptions = {
         kid: {
           ...ctx.kid,
           name: event.name,
+        },
+      }
+    }),
+    resetForm: assign((ctx: AddKidPageMachineContext, event: any) => {
+      return {
+        kid: {
+          name: '',
         },
       }
     }),
