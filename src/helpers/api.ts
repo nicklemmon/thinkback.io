@@ -1,8 +1,8 @@
 import Parse from 'parse'
 import { ApiResponse, Kid, Memory, Username } from 'src/types'
-import { getCurrentUser } from './user'
+import { getCurrentUser, getSessionToken } from './user'
 
-export function signUp(username: Username, email: string, password: string) {
+export async function signUp(username: Username, email: string, password: string) {
   const user = new Parse.User()
 
   user.set('username', username)
@@ -11,52 +11,56 @@ export function signUp(username: Username, email: string, password: string) {
 
   return user
     .signUp()
-    .then(res => res)
-    .catch(err => err)
+    .then(res => Promise.resolve(res))
+    .catch(err => Promise.reject(err))
 }
 
-export function logIn(username: Username, password: string) {
+export async function logIn(username: Username, password: string) {
   return Parse.User.logIn(username, password)
-    .then(res => res)
-    .catch(err => err)
+    .then(res => Promise.resolve(res))
+    .catch(err => Promise.reject(err))
 }
 
-export function logOut() {
+export async function logOut() {
   return Parse.User.logOut()
-    .then(res => res)
-    .catch(err => err)
+    .then(res => Promise.resolve(res))
+    .catch(err => Promise.reject(err))
 }
 
-export function getMemories() {
+export async function getMemories() {
   const Memory = Parse.Object.extend('memory')
   const query = new Parse.Query(Memory)
   const currentUser = getCurrentUser()
-  const sessionToken = currentUser?.get('sessionToken')
+  const sessionToken = getSessionToken(currentUser)
 
   query.limit(1000)
 
   return query
     .find({ sessionToken })
     .then(res => parseResponse(res))
-    .catch(err => err)
+    .catch(err => Promise.reject(err))
 }
 
-export function getMemory(id: string) {
+export async function getMemory(id: string) {
   const Memory = Parse.Object.extend('memory')
   const query = new Parse.Query(Memory)
+  const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
 
   query.equalTo('objectId', id)
 
   return query
-    .first()
+    .first({ sessionToken })
     .then(res => parseResponse(res))
-    .catch(err => err)
+    .catch(err => Promise.reject(err))
 }
 
-export function updateMemory(memory: Memory) {
+export async function updateMemory(memory: Memory) {
   const { title, summary, recordedDate, tags } = memory
   const Memory = Parse.Object.extend('memory')
   const query = new Parse.Query(Memory)
+  const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
 
   return query.get(memory.objectId).then(object => {
     if (title) object.set('title', title)
@@ -65,17 +69,18 @@ export function updateMemory(memory: Memory) {
     if (tags) object.set('tags', tags)
 
     return object
-      .save()
-      .then(res => res)
-      .catch(err => err)
+      .save({ sessionToken })
+      .then(res => Promise.resolve(res))
+      .catch(err => Promise.reject(err))
   })
 }
 
-export function createMemory(memory: Memory) {
+export async function createMemory(memory: Memory) {
   const { title, summary, tags, recordedDate } = memory
   const Memory = Parse.Object.extend('memory')
   const object = new Memory()
   const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
 
   object.set('title', title)
   object.set('summary', summary)
@@ -84,60 +89,89 @@ export function createMemory(memory: Memory) {
   object.setACL(currentUser)
 
   return object
-    .save()
+    .save({ sessionToken })
     .then((res: ApiResponse) => res)
     .catch((err: any) => err)
 }
 
-export function deleteMemory(memoryId: string) {
+export async function deleteMemory(memoryId: string) {
   const Memory = Parse.Object.extend('memory')
   const query = new Parse.Query(Memory)
+  const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
 
   return query
     .get(memoryId)
-    .then(obj => obj.destroy())
-    .catch(err => err)
+    .then(obj => obj.destroy({ sessionToken }))
+    .catch(err => Promise.reject(err))
 }
 
-export function getUser(userId: string) {
+export async function getUser(userId: string) {
   const User = Parse.Object.extend('User')
   const query = new Parse.Query(User)
 
   return query
     .get(userId)
     .then(res => parseResponse(res))
-    .catch(err => err)
+    .catch(err => Promise.reject(err))
 }
 
-function parseResponse(res: ApiResponse) {
-  return JSON.parse(JSON.stringify(res))
+export async function getKid(id: string) {
+  const Kid = Parse.Object.extend('Kid')
+  const query = new Parse.Query(Kid)
+  const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
+
+  query.equalTo('objectId', id)
+
+  return query
+    .first({ sessionToken })
+    .then(res => parseResponse(res))
+    .catch(err => Promise.reject(err))
 }
 
-export function getKids() {
+export async function getKids() {
   const KidClass = Parse.Object.extend('Kid')
   const query = new Parse.Query(KidClass)
   const currentUser = getCurrentUser()
-  const sessionToken = currentUser?.get('sessionToken')
+  const sessionToken = getSessionToken(currentUser)
 
   query.limit(1000)
 
   return query
     .find({ sessionToken })
     .then(res => parseResponse(res))
-    .catch(err => err)
+    .catch(err => Promise.reject(err))
 }
 
-export function createKid(kid: Kid) {
+export async function createKid(kid: Kid) {
   const { name } = kid
   const Kid = Parse.Object.extend('Kid')
   const object = new Kid()
   const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
 
   object.set('name', name)
   object.setACL(currentUser)
 
   return object
-    .save()
+    .save({ sessionToken })
     .then((res: ApiResponse) => res)
     .catch((err: any) => err)
+}
+
+export async function deleteKid(kidId: string) {
+  const Kid = Parse.Object.extend('Kid')
+  const query = new Parse.Query(Kid)
+  const currentUser = getCurrentUser()
+  const sessionToken = getSessionToken(currentUser)
+
+  return query
+    .get(kidId)
+    .then(obj => obj.destroy({ sessionToken }))
+    .catch(err => Promise.reject(err))
+}
+
+function parseResponse(res: ApiResponse) {
+  return JSON.parse(JSON.stringify(res))
 }
