@@ -4,3 +4,7 @@ import Parse, { User } from 'parse'
 export function getCurrentUser(): User | undefined {
   return Parse.User.current()
 }
+
+export function getSessionToken(currentUser: User | undefined) {
+  return currentUser?.get('sessionToken')
+}

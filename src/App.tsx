@@ -43,10 +43,6 @@ export function App() {
               <li>
                 <NavLink to="/profile">Profile</NavLink>
               </li>
-
-              <li>
-                <NavLink to="/toast-demo">Toast Demo</NavLink>
-              </li>
             </ul>
 
             <button onClick={() => send({ type: 'LOG_OUT' })}>Log Out</button>
@@ -73,7 +69,20 @@ export function App() {
           </Route>
 
           <Route path="/sign-up">
-            <SignUpPage />
+            <SignUpPage
+              handleSignUp={(submitEvent: {
+                username: string
+                email: string
+                password: string
+              }) => {
+                send({
+                  type: 'SIGN_UP',
+                  username: submitEvent.username,
+                  email: submitEvent.email,
+                  password: submitEvent.password,
+                })
+              }}
+            />
           </Route>
 
           <Route path="/dashboard">
