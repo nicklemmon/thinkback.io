@@ -1,4 +1,5 @@
 import { useMachine } from '@xstate/react'
+import { Link } from 'react-router-dom'
 import { Page } from 'src/components'
 import { memoriesPageMachine } from 'src/machines'
 
@@ -22,7 +23,11 @@ export function MemoriesPage() {
         {state.matches('success') ? (
           <ul>
             {state.context.memories.map(memory => {
-              return <li key={memory.objectId}>{memory.title}</li>
+              return (
+                <li key={memory.objectId}>
+                  <Link to={`/memories/${memory.objectId}`}>{memory.title}</Link>
+                </li>
+              )
             })}
           </ul>
         ) : null}

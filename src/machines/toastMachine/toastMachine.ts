@@ -20,7 +20,7 @@ const addToastToCtx: ActionObject<ToastMachineContext, ShowToastEvent> = assign(
 )
 
 const clearToastFromCtx: ActionObject<ToastMachineContext, ClearToastEvent> = assign(
-  (ctx, event) => {
+  (ctx, event: any) => {
     const nextToasts = ctx.toasts.filter(toast => toast.id !== event.id)
 
     return {

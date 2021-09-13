@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Page } from 'src/components'
 
 type HandleSignUpParams = {
@@ -50,6 +51,10 @@ export function SignUpPage({ handleSignUp }: SignUpProps) {
 
           <input type="submit" value="Sign Up" />
         </form>
+
+        <p>
+          Already signed up? <Link to="/auth">Log in.</Link>
+        </p>
       </Page.Content>
     </Page>
   )

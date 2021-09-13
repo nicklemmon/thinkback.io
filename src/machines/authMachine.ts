@@ -1,8 +1,9 @@
 import { createMachine, assign } from 'xstate'
 import Parse from 'parse'
-import { logIn, logOut } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
+import { logIn, logOut, signUp } from 'src/helpers/api'
 import { getCurrentUser } from 'src/helpers/user'
+import { Toast as ToastType } from 'src/types'
 
 type AuthMachineContext = {
   user: Object | undefined
@@ -11,10 +12,11 @@ type AuthMachineContext = {
 
 type AuthMachineEvents =
   | { type: 'LOGIN'; username: string; password: string }
-  | { type: 'SIGN_UP' }
+  | { type: 'SIGN_UP'; username: string; email: string; password: string }
   | { type: 'LOG_OUT' }
 
-const authMachine = (history: BrowserHistory) =>
+/** Manages app auth state on initial load. Also handles logging in, sighing up, and logging out. Some router dependencies are passed as arguments. */
+const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => void) =>
   createMachine<AuthMachineContext, AuthMachineEvents>(
     {
       id: 'auth',
@@ -40,7 +42,7 @@ const authMachine = (history: BrowserHistory) =>
           entry: 'navigateToAuthPage',
           on: {
             LOGIN: 'loggingIn',
-            SIGN_UP: 'signUp',
+            SIGN_UP: 'signingUp',
           },
         },
         loggingIn: {
@@ -49,6 +51,7 @@ const authMachine = (history: BrowserHistory) =>
             src: (_context, event: any) => logIn(event.username, event.password),
             onDone: {
               target: 'authorized',
+              actions: ['navigateToDashboard'],
             },
             onError: {
               target: 'unauthorized',
@@ -57,7 +60,6 @@ const authMachine = (history: BrowserHistory) =>
           },
         },
         authorized: {
-          entry: 'navigateToDashboard',
           on: {
             LOG_OUT: 'loggingOut',
           },
@@ -77,6 +79,20 @@ const authMachine = (history: BrowserHistory) =>
         },
         signUp: {
           entry: 'navigateToSignUp',
+        },
+        signingUp: {
+          invoke: {
+            // TODO: Boo any
+            src: (_context, event: any) => signUp(event.username, event.email, event.password),
+            onDone: {
+              target: 'authorized',
+              actions: 'assignUserToCtx',
+            },
+            onError: {
+              target: 'unauthorized',
+              actions: 'handleSignUpFailure',
+            },
+          },
         },
       },
     },
@@ -104,8 +120,17 @@ const authMachine = (history: BrowserHistory) =>
 
           return { user }
         }),
-        handleLoginFailure: () => {},
-        handleLogOutFailure: () => {},
+        // TODO: pass error message to the toast
+        handleLoginFailure: () => {
+          return showToast({ message: 'Login failed', variant: 'error' })
+        },
+        handleLogOutFailure: () => {
+          return showToast({ message: 'Log out failed. Please try again.', variant: 'error' })
+        },
+        // TODO: pass error message to the toast
+        handleSignUpFailure: () => {
+          return showToast({ message: 'Sign up failed.', variant: 'error' })
+        },
       },
       guards: {
         isLoggedIn: (ctx): boolean => Boolean(ctx.user),

@@ -10,22 +10,34 @@ import {
   LoginPage,
   MemoriesPage,
   MemoryDetailPage,
+  NotFoundPage,
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { ToastList } from 'src/components'
+import { ProtectedRoute, ToastList } from 'src/components'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
 export function App() {
-  const [state, send] = useAuthMachine()
-
   return (
     <Providers>
-      <header>
-        <Link to={state.matches('authorized') ? '/dashboard' : '/auth'}>Memories App</Link>
+      <AppContent />
+    </Providers>
+  )
+}
 
-        {state.matches('authorized') ? (
+function AppContent() {
+  const [state, send] = useAuthMachine()
+  const authorized = state.matches('authorized')
+
+  console.log('state.value', state.value)
+
+  return (
+    <>
+      <header>
+        <Link to={authorized ? '/dashboard' : '/auth'}>Memories App</Link>
+
+        {authorized ? (
           <nav>
             <ul>
               <li>
@@ -56,7 +68,7 @@ export function App() {
             <LandingPage />
           </Route>
 
-          <Route path="/auth">
+          <ProtectedRoute condition={!authorized} path="/auth" exact>
             <LoginPage
               handleLogin={(submitEvent: { username: string; password: string }) =>
                 send({
@@ -66,9 +78,9 @@ export function App() {
                 })
               }
             />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/sign-up">
+          <ProtectedRoute condition={!authorized} path="/sign-up">
             <SignUpPage
               handleSignUp={(submitEvent: {
                 username: string
@@ -83,38 +95,46 @@ export function App() {
                 })
               }}
             />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/dashboard">
+          <ProtectedRoute condition={authorized} path="/dashboard">
             <DashboardPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/kids" exact>
+          <ProtectedRoute condition={authorized} path="/kids" exact>
             <KidsPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/kids/add">
+          <ProtectedRoute condition={authorized} path="/kids/add">
             <AddKidPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/kids/:id">
+          <ProtectedRoute condition={authorized} path="/kids/:id">
             <KidDetailsPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/memories" exact>
+          <ProtectedRoute condition={authorized} path="/memories" exact>
             <MemoriesPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/memories/add">
+          <ProtectedRoute condition={authorized} path="/memories/add">
             <AddMemoryPage />
-          </Route>
+          </ProtectedRoute>
 
-          <Route path="/memories/:id">
+          <ProtectedRoute condition={authorized} path="/memories/:id">
             <MemoryDetailPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute condition={authorized} path="/profile">
+            <ProfilePage />
+          </ProtectedRoute>
+
+          <Route path="/404">
+            <NotFoundPage />
           </Route>
 
-          <Route path="/profile">
-            <ProfilePage />
+          <Route>
+            <NotFoundPage />
           </Route>
         </Switch>
 
@@ -122,6 +142,6 @@ export function App() {
       </main>
 
       <footer></footer>
-    </Providers>
+    </>
   )
 }
