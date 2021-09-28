@@ -1,5 +1,5 @@
 import Parse from 'parse'
-import { ApiResponse, Kid, Memory, Username } from 'src/types'
+import { ApiResponse, Kid, Memory, NewMemory, Username } from 'src/types'
 import { getCurrentUser, getSessionToken } from './user'
 
 export async function signUp(username: Username, email: string, password: string) {
@@ -75,7 +75,7 @@ export async function updateMemory(memory: Memory) {
   })
 }
 
-export async function createMemory(memory: Memory) {
+export async function createMemory(memory: NewMemory) {
   const { title, summary, tags, recordedDate } = memory
   const Memory = Parse.Object.extend('memory')
   const object = new Memory()
@@ -91,7 +91,7 @@ export async function createMemory(memory: Memory) {
   return object
     .save({ sessionToken })
     .then((res: ApiResponse) => res)
-    .catch((err: any) => err)
+    .catch((err: any) => Promise.reject(err))
 }
 
 export async function deleteMemory(memoryId: string) {

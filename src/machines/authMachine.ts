@@ -106,14 +106,14 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY)
           Parse.serverURL = PARSE_HOST_URL
         },
-        navigateToAuthPage: ctx => {
-          return ctx.history.push('/auth')
+        navigateToAuthPage: _ctx => {
+          return history.push('/auth')
         },
-        navigateToDashboard: ctx => {
-          return ctx.history.push('/dashboard')
+        navigateToDashboard: _ctx => {
+          return history.push('/dashboard')
         },
-        navigateToSignUp: ctx => {
-          return ctx.history.push('/sign-up')
+        navigateToSignUp: _ctx => {
+          return history.push('/sign-up')
         },
         assignUserToCtx: assign((_ctx: AuthMachineContext) => {
           const user = getCurrentUser()

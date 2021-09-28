@@ -10,6 +10,8 @@ export function MemoriesPage() {
     <Page>
       <Page.Title>Memories</Page.Title>
 
+      <Link to="/memories/add">Add a Memory</Link>
+
       <Page.Content>
         {state.matches('loading') && <p>Loading....</p>}
 

@@ -7,7 +7,14 @@ export type Memory = {
   updatedAt: Date
   objectId: string
   summary?: string
-  tags?: Array<string>
+  tags?: string[]
+}
+
+export type NewMemory = {
+  title: string
+  recordedDate: Date
+  summary?: string
+  tags?: string[]
 }
 
 export type ApiResponse = any
