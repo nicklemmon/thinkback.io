@@ -1,6 +1,26 @@
 import React from 'react'
-import { Form, Page } from 'src/components'
+import { Form, MultiSelect, Page } from 'src/components'
 import { useAddMemoryPage } from 'src/hooks'
+
+type Tag = {
+  value: string
+  label: string
+}
+
+const TAG_OPTIONS: Tag[] = [
+  {
+    value: 'aww',
+    label: 'aww',
+  },
+  {
+    value: 'funny',
+    label: 'funny',
+  },
+  {
+    value: 'firsts',
+    label: 'firsts',
+  },
+]
 
 export function AddMemoryPage() {
   const [state, send] = useAddMemoryPage()
@@ -12,12 +32,14 @@ export function AddMemoryPage() {
       title: { value: string }
       summary: { value: string }
       recordedDate: { value: Date }
+      tags: { value: string }
     }
     const title = target.title.value
     const summary = target.summary.value
     const recordedDate = new Date(target.recordedDate.value)
+    const tags = target.tags.value ? target.tags.value.split(',') : []
 
-    return send({ type: 'SUBMIT', memory: { title, summary, recordedDate } })
+    return send({ type: 'SUBMIT', memory: { title, summary, recordedDate, tags } })
   }
 
   return (
@@ -29,7 +51,13 @@ export function AddMemoryPage() {
           <div>
             <label htmlFor="title">Title</label>
 
-            <input type="text" name="title" id="title" disabled={state.matches('loading')} />
+            <input
+              type="text"
+              name="title"
+              id="title"
+              disabled={state.matches('loading')}
+              required
+            />
           </div>
 
           <div>
@@ -47,6 +75,17 @@ export function AddMemoryPage() {
               id="recorded-date"
               defaultValue={formatDate(new Date())}
               max={formatDate(new Date())}
+              disabled={state.matches('loading')}
+              required
+            />
+          </div>
+
+          <div>
+            <MultiSelect
+              label="Tags"
+              id="tags"
+              name="tags"
+              options={['aww', 'funny', 'firsts']}
               disabled={state.matches('loading')}
             />
           </div>

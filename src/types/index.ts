@@ -14,7 +14,7 @@ export type NewMemory = {
   title: string
   recordedDate: Date
   summary?: string
-  tags?: string[]
+  tags?: string[] | []
 }
 
 export type ApiResponse = any

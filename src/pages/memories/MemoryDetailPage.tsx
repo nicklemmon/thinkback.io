@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Page } from 'src/components'
+import { Form, Page } from 'src/components'
 
 export function MemoryDetailPage() {
   return (
@@ -9,6 +9,10 @@ export function MemoryDetailPage() {
 
       <Page.Content>
         <Link to="/memories">Back to Memories</Link>
+
+        <Form onSubmit={() => {}}>
+          <p>Hello</p>
+        </Form>
       </Page.Content>
     </Page>
   )
