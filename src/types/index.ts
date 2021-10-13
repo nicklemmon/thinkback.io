@@ -1,20 +1,29 @@
 export type Username = string
 
+type RecordedDate = {
+  __type: 'Date'
+  iso: string
+}
+
+export type Tag = {
+  name: string
+}
+
 export type Memory = {
   title: string
-  recordedDate: Date
+  recordedDate: RecordedDate
   createdAt: Date
   updatedAt: Date
   objectId: string
   summary?: string
-  tags?: string[]
+  tags?: Tag[] | []
 }
 
 export type NewMemory = {
   title: string
   recordedDate: Date
   summary?: string
-  tags?: string[] | []
+  tags?: Tag[] | []
 }
 
 export type ApiResponse = any

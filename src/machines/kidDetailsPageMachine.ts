@@ -14,11 +14,11 @@ type KidDetailsPageEvents =
   | { type: 'CANCEL_DELETION' }
   | { type: 'DELETE'; id: string | undefined }
 
-type KidDetailPageParams = {
+type KidDetailsPageParams = {
   id?: string
 }
 
-const kidDetailsPageMachine = (queryStringParams: KidDetailPageParams, history: BrowserHistory) =>
+const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history: BrowserHistory) =>
   createMachine<KidDetailsPageMachineContext, KidDetailsPageEvents>(
     {
       id: 'kidDetailsPage',

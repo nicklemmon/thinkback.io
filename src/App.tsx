@@ -9,7 +9,7 @@ import {
   LandingPage,
   LoginPage,
   MemoriesPage,
-  MemoryDetailPage,
+  MemoryDetailsPage,
   NotFoundPage,
   ProfilePage,
   SignUpPage,
@@ -122,7 +122,7 @@ function AppContent() {
           </ProtectedRoute>
 
           <ProtectedRoute condition={authorized} path="/memories/:id">
-            <MemoryDetailPage />
+            <MemoryDetailsPage />
           </ProtectedRoute>
 
           <ProtectedRoute condition={authorized} path="/profile">

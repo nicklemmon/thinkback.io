@@ -1,6 +1,6 @@
 import { useSelect, useMultipleSelection } from 'downshift'
 
-type MultiSelectOption = string
+type MultiSelectOptions = any[] | []
 
 export function MultiSelect({
   options,
@@ -9,14 +9,16 @@ export function MultiSelect({
   placeholder,
   defaultValue = [],
   disabled = false,
+  itemToString = arg => arg,
 }: {
-  options: MultiSelectOption[]
+  options: MultiSelectOptions
   label: string
   id: string
-  disabled: boolean
+  disabled?: boolean
   name?: string
   placeholder?: string
-  defaultValue?: MultiSelectOption[]
+  defaultValue?: MultiSelectOptions
+  itemToString?: (arg: any) => string
 }) {
   const {
     getSelectedItemProps,
@@ -24,9 +26,14 @@ export function MultiSelect({
     addSelectedItem,
     removeSelectedItem,
     selectedItems,
-  } = useMultipleSelection({ initialSelectedItems: defaultValue })
-  const getFilteredItems = (options: MultiSelectOption[]) =>
-    options.filter(option => selectedItems.indexOf(option) < 0)
+  } = useMultipleSelection({ initialSelectedItems: defaultValue.map(itemToString) })
+
+  const formattedOptions: string[] | [] = options.map(itemToString)
+
+  const getFilteredItems = (options: MultiSelectOptions) => {
+    return options.filter(option => selectedItems.indexOf(option) < 0)
+  }
+
   const {
     isOpen,
     getToggleButtonProps,
@@ -37,7 +44,7 @@ export function MultiSelect({
   } = useSelect({
     selectedItem: null,
     defaultHighlightedIndex: 0, // after selection, highlight the first item.
-    items: getFilteredItems(options),
+    items: getFilteredItems(formattedOptions),
     stateReducer: (_state, actionAndChanges) => {
       const { changes, type } = actionAndChanges
       switch (type) {
@@ -96,7 +103,7 @@ export function MultiSelect({
 
         <ul {...getMenuProps()}>
           {isOpen &&
-            getFilteredItems(options).map((item, index) => (
+            getFilteredItems(formattedOptions).map((item, index) => (
               <li
                 key={`${item}-${index}`}
                 style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}

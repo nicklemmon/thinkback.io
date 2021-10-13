@@ -1,26 +1,9 @@
 import React from 'react'
 import { Form, MultiSelect, Page } from 'src/components'
 import { useAddMemoryPage } from 'src/hooks'
-
-type Tag = {
-  value: string
-  label: string
-}
-
-const TAG_OPTIONS: Tag[] = [
-  {
-    value: 'aww',
-    label: 'aww',
-  },
-  {
-    value: 'funny',
-    label: 'funny',
-  },
-  {
-    value: 'firsts',
-    label: 'firsts',
-  },
-]
+import { formatDate } from 'src/helpers/date'
+import { Tag } from 'src/types'
+import { TAG_OPTIONS } from 'src/constants'
 
 export function AddMemoryPage() {
   const [state, send] = useAddMemoryPage()
@@ -38,8 +21,13 @@ export function AddMemoryPage() {
     const summary = target.summary.value
     const recordedDate = new Date(target.recordedDate.value)
     const tags = target.tags.value ? target.tags.value.split(',') : []
+    const formattedTags = tags.map(tag => {
+      return {
+        name: tag,
+      }
+    })
 
-    return send({ type: 'SUBMIT', memory: { title, summary, recordedDate, tags } })
+    return send({ type: 'SUBMIT', memory: { title, summary, recordedDate, tags: formattedTags } })
   }
 
   return (
@@ -85,8 +73,9 @@ export function AddMemoryPage() {
               label="Tags"
               id="tags"
               name="tags"
-              options={['aww', 'funny', 'firsts']}
+              options={TAG_OPTIONS}
               disabled={state.matches('loading')}
+              itemToString={(option: Tag) => option.name}
             />
           </div>
 
@@ -97,8 +86,4 @@ export function AddMemoryPage() {
       </Page.Content>
     </Page>
   )
-}
-
-function formatDate(date: Date) {
-  return date.toISOString().split('T')[0]
 }
