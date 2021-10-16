@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet'
+import { Heading } from 'src/components'
 
 type PageProps = {
   children: React.ReactNode
@@ -25,7 +26,7 @@ function PageTitle({ children }: PageTitleProps) {
         <title>{children} | Memories App</title>
       </Helmet>
 
-      <h1>{children}</h1>
+      <Heading as="h1">{children}</Heading>
     </>
   )
 }

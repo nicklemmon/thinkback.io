@@ -1,4 +1,6 @@
 export * from './Form'
+export * from './Header'
+export * from './Heading'
 export * from './Link'
 export * from './MultiSelect'
 export * from './Page'
