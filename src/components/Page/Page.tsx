@@ -20,6 +20,8 @@ function PageTitle({ children }: PageTitleProps) {
   return (
     <>
       <Helmet defer={false}>
+        {/* TODO: Should probably convert this to a string or there is room for a bug here */}
+        {/* TODO: Need to be able to handle page categories */}
         <title>{children} | Memories App</title>
       </Helmet>
 

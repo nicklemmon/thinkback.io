@@ -1,4 +1,6 @@
 import { ReactNode } from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { ChakraProvider } from '@chakra-ui/react'
 import { ToastProvider } from './context'
 
 type ProvidersProps = {
@@ -6,5 +8,11 @@ type ProvidersProps = {
 }
 
 export function Providers({ children }: ProvidersProps) {
-  return <ToastProvider>{children}</ToastProvider>
+  return (
+    <BrowserRouter>
+      <ChakraProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </ChakraProvider>
+    </BrowserRouter>
+  )
 }

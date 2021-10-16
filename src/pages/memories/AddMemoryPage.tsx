@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Form, MultiSelect, Page } from 'src/components'
+import { Link, Form, MultiSelect, Page } from 'src/components'
 import { useAddMemoryPage } from 'src/hooks'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'

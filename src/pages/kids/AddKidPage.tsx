@@ -1,7 +1,6 @@
 import { useMachine } from '@xstate/react'
 import { ChangeEvent } from 'react'
-import { Link } from 'react-router-dom'
-import { Form, Page, Toast } from 'src/components'
+import { Link, Form, Page, Toast } from 'src/components'
 import { addKidPageMachine } from 'src/machines'
 
 export function AddKidPage() {

@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom'
 import { useMachine } from '@xstate/react'
-import { Page } from 'src/components'
+import { Link, Page } from 'src/components'
 import { kidsPageMachine } from 'src/machines/kidsPageMachine'
 
 export function KidsPage() {

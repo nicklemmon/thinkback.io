@@ -1,6 +1,5 @@
 import { useMachine } from '@xstate/react'
-import { Link } from 'react-router-dom'
-import { Page } from 'src/components'
+import { Link, Page } from 'src/components'
 import { memoriesPageMachine } from 'src/machines'
 
 export function MemoriesPage() {

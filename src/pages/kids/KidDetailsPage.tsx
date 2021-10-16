@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom'
-import { Page } from 'src/components'
+import { Link, Page } from 'src/components'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {

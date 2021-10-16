@@ -1,7 +1,7 @@
 import React from 'react'
 import Parse from 'parse'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
+
 import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 
@@ -14,9 +14,7 @@ Parse.serverURL = PARSE_HOST_URL
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <App />
   </React.StrictMode>,
   document.getElementById('root'),
 )

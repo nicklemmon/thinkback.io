@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Form, MultiSelect, Page } from 'src/components'
+import { Link, Form, MultiSelect, Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
@@ -12,8 +11,6 @@ export function MemoryDetailsPage() {
   const memoryTitle = memory?.title
 
   function handleSubmit(e: React.SyntheticEvent) {
-    e.preventDefault()
-
     const target = e.target as typeof e.target & {
       title: { value: string }
       summary: { value: string }

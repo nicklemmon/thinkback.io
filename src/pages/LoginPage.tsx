@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Page } from 'src/components'
+import { Link, Page } from 'src/components'
 
 type HandleLoginParams = {
   username: string
