@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Form, MultiSelect, Page } from 'src/components'
 import { useAddMemoryPage } from 'src/hooks'
 import { formatDate } from 'src/helpers/date'
@@ -33,6 +34,8 @@ export function AddMemoryPage() {
   return (
     <Page>
       <Page.Title>Add Memory</Page.Title>
+
+      <Link to="/memories">Back to Memories</Link>
 
       <Page.Content>
         <Form onSubmit={handleSubmit}>

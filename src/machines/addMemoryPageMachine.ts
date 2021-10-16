@@ -16,7 +16,7 @@ type AddMemoryPageMachineSchema = {
 type AddKidPageMachineEvents = { type: 'SUBMIT'; memory: NewMemory }
 
 function addMemoryPageMachine(showToast: (toast: Toast) => void) {
-  const addMemoryPageMachineConfig: MachineConfig<
+  const machineConfig: MachineConfig<
     AddMemoryPageMachineContext,
     AddMemoryPageMachineSchema,
     AddKidPageMachineEvents
@@ -56,7 +56,7 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
     },
   }
 
-  const addMemoryPageMachineOptions = {
+  const machineOptions = {
     actions: {
       handleError: () => {
         return showToast({ message: 'Memory creation failed. Try again.', variant: 'error' })
@@ -67,7 +67,7 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
     },
   }
 
-  return createMachine(addMemoryPageMachineConfig, addMemoryPageMachineOptions)
+  return createMachine(machineConfig, machineOptions)
 }
 
 export { addMemoryPageMachine }

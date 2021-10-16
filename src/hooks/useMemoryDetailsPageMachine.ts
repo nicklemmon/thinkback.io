@@ -1,6 +1,7 @@
 import { useMachine } from '@xstate/react'
 import { useParams, useHistory } from 'react-router-dom'
-import { memoryDetailsPageMachine } from 'src/machines/memoryDetailsPageMachine'
+import { memoryDetailsPageMachine } from 'src/machines'
+import { useToast } from 'src/hooks'
 
 type MemoryDetailsPageParams = {
   id?: string
@@ -9,7 +10,8 @@ type MemoryDetailsPageParams = {
 export function useMemoryDetailsPageMachine() {
   const params = useParams<MemoryDetailsPageParams>()
   const history = useHistory()
-  const machine = memoryDetailsPageMachine(params, history)
+  const { showToast } = useToast()
+  const machine = memoryDetailsPageMachine(params, history, showToast)
 
   return useMachine(machine)
 }

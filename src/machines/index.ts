@@ -1,6 +1,7 @@
 export * from './addKidPageMachine'
 export * from './addMemoryPageMachine'
 export * from './authMachine'
+export * from './memoryDetailsPageMachine'
 export * from './memoriesPageMachine'
 export * from './profilePageMachine'
 export * from './toastMachine'

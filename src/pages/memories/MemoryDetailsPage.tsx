@@ -1,3 +1,4 @@
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { Form, MultiSelect, Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
@@ -9,6 +10,38 @@ export function MemoryDetailsPage() {
   const [state, send] = useMemoryDetailsPageMachine()
   const { memory } = state.context
   const memoryTitle = memory?.title
+
+  function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault()
+
+    const target = e.target as typeof e.target & {
+      title: { value: string }
+      summary: { value: string }
+      recordedDate: { value: Date }
+      tags: { value: string }
+    }
+
+    const title = target.title.value
+    const summary = target.summary.value
+    const recordedDate = new Date(target.recordedDate.value)
+    const tags = target.tags.value ? target.tags.value.split(',') : []
+    const formattedTags = tags.map(tag => {
+      return {
+        name: tag,
+      }
+    })
+    const updatedMemory = {
+      ...memory,
+      title,
+      summary,
+      recordedDate,
+      tags: formattedTags,
+    }
+
+    // TODO: I don't know why this isn't working - xstate and TS don't seem to play nicely together
+    /* @ts-ignore */
+    return send({ type: 'SUBMIT', memory: updatedMemory })
+  }
 
   return (
     <Page>
@@ -49,8 +82,8 @@ export function MemoryDetailsPage() {
           </div>
         ) : null}
 
-        {state.matches('loaded') && memory ? (
-          <Form onSubmit={() => {}}>
+        {(state.matches('loaded') || state.matches('submitting')) && memory ? (
+          <Form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="title">Title</label>
 
