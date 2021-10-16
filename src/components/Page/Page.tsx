@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet'
+
 type PageProps = {
   children: React.ReactNode
 }
@@ -15,7 +17,15 @@ function Page({ children }: PageProps) {
 }
 
 function PageTitle({ children }: PageTitleProps) {
-  return <h1>{children}</h1>
+  return (
+    <>
+      <Helmet defer={false}>
+        <title>{children} | Memories App</title>
+      </Helmet>
+
+      <h1>{children}</h1>
+    </>
+  )
 }
 
 function PageContent({ children }: PageContentProps) {
