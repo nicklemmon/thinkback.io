@@ -22,9 +22,15 @@ const sharedEventTransitions = {
     actions: 'setNameToCtx',
     target: 'editing',
   },
-  SUBMIT: {
-    target: 'loading',
-  },
+  SUBMIT: [
+    {
+      target: 'loading',
+      cond: 'nameExists',
+    },
+    {
+      target: 'error',
+    },
+  ],
 }
 
 const addKidPageMachineConfig: MachineConfig<
@@ -81,6 +87,11 @@ const addKidPageMachineOptions = {
         },
       }
     }),
+  },
+  guards: {
+    nameExists: (ctx: AddKidPageMachineContext) => {
+      return Boolean(ctx.kid.name)
+    },
   },
 }
 

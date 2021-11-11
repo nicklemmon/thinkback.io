@@ -3,7 +3,7 @@ import { Memory, Toast } from 'src/types'
 import { deleteMemory, getMemory, updateMemory } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
-type MemoryDetailsPageMachineContext = {
+export type MemoryDetailsPageMachineContext = {
   memory: Memory | undefined
   error: Object | undefined
 }

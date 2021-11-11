@@ -1,4 +1,5 @@
-import { Link, Page } from 'src/components'
+import { Page } from 'src/components'
+import { Link } from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {

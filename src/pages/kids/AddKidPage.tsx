@@ -1,6 +1,7 @@
 import { useMachine } from '@xstate/react'
 import { ChangeEvent } from 'react'
-import { Link, Form, Page, Toast } from 'src/components'
+import { Form, Page, Toast } from 'src/components'
+import { Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
 import { addKidPageMachine } from 'src/machines'
 
 export function AddKidPage() {
@@ -22,25 +23,26 @@ export function AddKidPage() {
 
       {state.matches('success') && <Toast message="New kid successfully added" variant="success" />}
 
-      {state.matches('error') && <p>Failed to add kid, whatever</p>}
+      {state.matches('error') && <p role="alert">Failed to add kid, try again.</p>}
 
       <Form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="first-name">First Name</label>
+        <VStack align="flex-start">
+          <FormControl id="first-name">
+            <FormLabel>First Name</FormLabel>
 
-          <input
-            type="text"
-            name="name"
-            id="first-name"
-            onChange={handleNameChange}
-            value={state.context.kid.name}
-            disabled={state.matches('loading')}
-          />
-        </div>
+            <Input
+              type="text"
+              name="name"
+              onChange={handleNameChange}
+              value={state.context.kid.name}
+              isDisabled={state.matches('loading')}
+            />
+          </FormControl>
 
-        <button type="submit" disabled={state.matches('loading')}>
-          Add Kid
-        </button>
+          <Button colorScheme="blue" type="submit" isLoading={state.matches('loading')}>
+            Add Kid
+          </Button>
+        </VStack>
       </Form>
     </Page>
   )

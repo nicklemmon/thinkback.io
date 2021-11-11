@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, Form, MultiSelect, Page } from 'src/components'
+import { Form, MultiSelect, Page } from 'src/components'
+import { Link } from 'src/components/chakra'
 import { useAddMemoryPage } from 'src/hooks'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'

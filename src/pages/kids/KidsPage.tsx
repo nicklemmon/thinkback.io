@@ -1,5 +1,6 @@
 import { useMachine } from '@xstate/react'
-import { Link, Page } from 'src/components'
+import { Page } from 'src/components'
+import { Button, Link } from 'src/components/chakra'
 import { kidsPageMachine } from 'src/machines/kidsPageMachine'
 
 export function KidsPage() {
@@ -9,9 +10,12 @@ export function KidsPage() {
     <Page>
       <Page.Title>Kids</Page.Title>
 
-      <Link to="/kids/add">Add a Kid</Link>
-
       <Page.Content>
+        {/* @ts-expect-error */}
+        <Button colorScheme="blue" as={Link} to="/kids/add">
+          Add a Kid
+        </Button>
+
         {state.matches('loading') && <p>Loading....</p>}
 
         {state.matches('error') && (

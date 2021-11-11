@@ -1,5 +1,6 @@
 import { useMachine } from '@xstate/react'
-import { Link, Page } from 'src/components'
+import { Page } from 'src/components'
+import { Button, Link } from 'src/components/chakra'
 import { memoriesPageMachine } from 'src/machines'
 
 export function MemoriesPage() {
@@ -9,9 +10,12 @@ export function MemoriesPage() {
     <Page>
       <Page.Title>Memories</Page.Title>
 
-      <Link to="/memories/add">Add a Memory</Link>
-
       <Page.Content>
+        {/* @ts-expect-error */}
+        <Button colorScheme="blue" as={Link} to="/memories/add">
+          Add a Memory
+        </Button>
+
         {state.matches('loading') && <p>Loading....</p>}
 
         {state.matches('error') && (

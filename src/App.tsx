@@ -1,4 +1,4 @@
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
@@ -15,6 +15,7 @@ import {
   SignUpPage,
 } from 'src/pages'
 import { ProtectedRoute, ToastList } from 'src/components'
+import { Link } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 

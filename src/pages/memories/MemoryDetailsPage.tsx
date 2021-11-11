@@ -1,13 +1,16 @@
 import React from 'react'
-import { Link, Form, MultiSelect, Page } from 'src/components'
+import { Form, MultiSelect, Page } from 'src/components'
+import { Link } from 'src/components/chakra'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
 import { TAG_OPTIONS } from 'src/constants'
+import { MemoryDetailsPageMachineContext } from 'src/machines'
 
 export function MemoryDetailsPage() {
   const [state, send] = useMemoryDetailsPageMachine()
-  const { memory } = state.context
+  // This casting shouldn't be necessary - but was intermittently encountering an error otherwise
+  const { memory } = state.context as MemoryDetailsPageMachineContext
   const memoryTitle = memory?.title
 
   function handleSubmit(e: React.SyntheticEvent) {

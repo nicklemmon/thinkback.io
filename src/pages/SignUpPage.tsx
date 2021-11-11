@@ -1,5 +1,6 @@
 import React from 'react'
-import { Link, Page } from 'src/components'
+import { Page } from 'src/components'
+import { Link } from 'src/components/chakra'
 
 type HandleSignUpParams = {
   username: string
