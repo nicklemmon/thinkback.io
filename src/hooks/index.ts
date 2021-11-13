@@ -1,4 +1,5 @@
 export * from './useAddMemoryPage'
+export * from './useAddKidPage'
 export * from './useAuthMachine'
 export * from './useKidDetailsPageMachine'
 export * from './useMemoryDetailsPageMachine'

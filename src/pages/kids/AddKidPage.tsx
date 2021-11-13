@@ -1,11 +1,21 @@
-import { useMachine } from '@xstate/react'
 import { ChangeEvent } from 'react'
 import { Form, Page, Toast } from 'src/components'
-import { Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
-import { addKidPageMachine } from 'src/machines'
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Link,
+  VStack,
+} from 'src/components/chakra'
+import { useAddKidPage } from 'src/hooks'
 
 export function AddKidPage() {
-  const [state, send] = useMachine(addKidPageMachine)
+  const [state, send] = useAddKidPage()
 
   function handleSubmit() {
     return send({ type: 'SUBMIT' })
@@ -23,7 +33,13 @@ export function AddKidPage() {
 
       {state.matches('success') && <Toast message="New kid successfully added" variant="success" />}
 
-      {state.matches('error') && <p role="alert">Failed to add kid, try again.</p>}
+      {state.matches('error') && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Error!</AlertTitle>
+          <AlertDescription>A "Name" is required to add a kid</AlertDescription>
+        </Alert>
+      )}
 
       <Form onSubmit={handleSubmit}>
         <VStack align="flex-start">

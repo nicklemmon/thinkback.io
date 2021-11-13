@@ -4,5 +4,5 @@ import { StackProps as ChakraVStackProps } from '@chakra-ui/layout'
 type VStackProps = ChakraVStackProps
 
 export function VStack(props: VStackProps) {
-  return <ChakraVStack {...props} />
+  return <ChakraVStack align="flex-start" {...props} />
 }

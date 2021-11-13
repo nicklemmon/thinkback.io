@@ -1,6 +1,14 @@
 import React from 'react'
-import { Form, MultiSelect, Page } from 'src/components'
-import { Link } from 'src/components/chakra'
+import { ButtonWrapper, Form, MultiSelect, Page } from 'src/components'
+import {
+  Button,
+  Link,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  VStack,
+} from 'src/components/chakra'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
@@ -45,13 +53,13 @@ export function MemoryDetailsPage() {
 
   return (
     <Page>
-      <Page.Title>{memoryTitle ? memoryTitle : 'Memory Details'}</Page.Title>
+      <Page.Title>Memory Details</Page.Title>
 
       <Link to="/memories">Back to Memories</Link>
 
-      <button type="button" onClick={() => send({ type: 'DELETE', id: memory?.objectId })}>
+      <Button colorScheme="blue" onClick={() => send({ type: 'DELETE', id: memory?.objectId })}>
         Delete Memory
-      </button>
+      </Button>
 
       <Page.Content>
         {state.matches('loading') || state.matches('deleting') ? <p>Loading...</p> : null}
@@ -84,48 +92,54 @@ export function MemoryDetailsPage() {
 
         {(state.matches('loaded') || state.matches('submitting')) && memory ? (
           <Form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="title">Title</label>
+            <VStack>
+              <FormControl id="title">
+                <FormLabel>Title</FormLabel>
 
-              <input type="text" name="title" id="title" defaultValue={memory.title} />
-            </div>
+                <Input type="text" id="title" defaultValue={memory.title} />
+              </FormControl>
 
-            <div>
-              <label htmlFor="summary">Summary</label>
+              <FormControl id="summary">
+                <FormLabel>Summary</FormLabel>
 
-              <textarea name="summary" id="summary" defaultValue={memory.summary} />
-            </div>
+                <Textarea name="summary" defaultValue={memory.summary} />
+              </FormControl>
 
-            <div>
-              <label htmlFor="recorded-date">Memory Date</label>
+              <FormControl id="recorded-date">
+                <FormLabel>Memory Date</FormLabel>
 
-              <input
-                type="date"
-                name="recordedDate"
-                id="recorded-date"
-                defaultValue={formatDate(new Date(memory.recordedDate.iso))}
-                max={formatDate(new Date())}
-                disabled={state.matches('loading')}
-                required
-              />
-            </div>
+                <Input
+                  type="date"
+                  name="recordedDate"
+                  id="recorded-date"
+                  defaultValue={formatDate(new Date(memory.recordedDate.iso))}
+                  max={formatDate(new Date())}
+                  isDisabled={state.matches('loading')}
+                  isRequired
+                />
+              </FormControl>
 
-            <div>
-              <MultiSelect
-                label="Tags"
-                id="tags"
-                name="tags"
-                options={TAG_OPTIONS}
-                defaultValue={memory.tags}
-                itemToString={(option: Tag) => option.name}
-              />
-            </div>
+              <FormControl>
+                <MultiSelect
+                  label="Tags"
+                  id="tags"
+                  name="tags"
+                  options={TAG_OPTIONS}
+                  defaultValue={memory.tags}
+                  itemToString={(option: Tag) => option.name}
+                />
+              </FormControl>
 
-            <div>
-              <button type="submit">Save</button>
+              <ButtonWrapper>
+                <Button colorScheme="blue" type="submit">
+                  Save
+                </Button>
 
-              <button type="button">Cancel</button>
-            </div>
+                <Button colorScheme="blue" variant="outline">
+                  Cancel
+                </Button>
+              </ButtonWrapper>
+            </VStack>
           </Form>
         ) : null}
       </Page.Content>

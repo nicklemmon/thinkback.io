@@ -28,7 +28,7 @@ export function AlertIcon(props: AlertIconProps) {
 }
 
 export function AlertTitle(props: AlertTitleProps) {
-  return <ChakraAlertTitle {...props} />
+  return <ChakraAlertTitle mr={2} {...props} />
 }
 
 export function AlertDescription(props: AlertDescriptionProps) {

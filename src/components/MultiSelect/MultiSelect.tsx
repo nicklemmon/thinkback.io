@@ -1,4 +1,15 @@
 import { useSelect, useMultipleSelection } from 'downshift'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import {
+  Box,
+  FormLabel,
+  HStack,
+  IconButton,
+  ListItem,
+  Tag,
+  TagLabel,
+  TagCloseButton,
+} from 'src/components/chakra'
 
 type MultiSelectOptions = any[] | []
 
@@ -27,6 +38,7 @@ export function MultiSelect({
     removeSelectedItem,
     selectedItems,
   } = useMultipleSelection({ initialSelectedItems: defaultValue.map(itemToString) })
+  const hasSelectedItems = Boolean(selectedItems.length)
 
   const formattedOptions: string[] | [] = options.map(itemToString)
 
@@ -74,49 +86,84 @@ export function MultiSelect({
   })
 
   return (
-    <div>
-      <label {...getLabelProps()}>{label}</label>
+    <Box>
+      <FormLabel {...getLabelProps()}>{label}</FormLabel>
 
-      <div>
-        {selectedItems.map((selectedItem, index) => (
-          <span key={`selected-item-${index}`} {...getSelectedItemProps({ selectedItem, index })}>
-            {selectedItem}
+      <Box
+        w="100%"
+        borderWidth="1px"
+        borderRadius="md"
+        paddingY={2}
+        paddingX={4}
+        position="relative"
+      >
+        {!hasSelectedItems ? (
+          <Box as="span" aria-hidden="true" color="gray.500">
+            {placeholder ? placeholder : 'Make a selection'}
+          </Box>
+        ) : null}
 
-            <button
-              onClick={() => removeSelectedItem(selectedItem)}
-              type="button"
-              disabled={disabled}
-              aria-label="Remove Selected Item"
-            >
-              &#10005;
-            </button>
-          </span>
-        ))}
-
-        <button
-          type="button"
-          disabled={disabled}
-          {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
-        >
-          {placeholder ? placeholder : 'Make a selection'}
-        </button>
-
-        <ul {...getMenuProps()}>
-          {isOpen &&
-            getFilteredItems(formattedOptions).map((item, index) => (
-              <li
-                key={`${item}-${index}`}
-                style={highlightedIndex === index ? { backgroundColor: '#bde4ff' } : {}}
-                {...getItemProps({ item, index })}
+        <Box>
+          <HStack>
+            {selectedItems.map((selectedItem, index) => (
+              <Tag
+                key={`selected-item-${index}`}
+                {...getSelectedItemProps({ selectedItem, index })}
               >
-                {item}
-              </li>
+                <TagLabel>{selectedItem}</TagLabel>
+
+                <TagCloseButton
+                  onClick={() => removeSelectedItem(selectedItem)}
+                  isDisabled={disabled}
+                  aria-label="Remove Selected Item"
+                >
+                  &#10005;
+                </TagCloseButton>
+              </Tag>
             ))}
-        </ul>
-      </div>
+          </HStack>
+        </Box>
+
+        <Box position="absolute" right="0" top="0">
+          <IconButton
+            aria-label="Make a selection"
+            variant="ghost"
+            icon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+            isDisabled={disabled}
+            {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
+          />
+        </Box>
+
+        {isOpen && (
+          <Box
+            position="absolute"
+            top="100%"
+            left="0"
+            width="100%"
+            zIndex="dropdown"
+            borderWidth="1px"
+          >
+            <ul style={{ listStyleType: 'none' }} {...getMenuProps()}>
+              {getFilteredItems(formattedOptions).map((item, index) => (
+                <ListItem
+                  key={`${item}-${index}`}
+                  paddingY={2}
+                  paddingX={4}
+                  cursor="pointer"
+                  backgroundColor="white"
+                  backgroundColorHover="gray.100"
+                  {...getItemProps({ item, index })}
+                >
+                  {item}
+                </ListItem>
+              ))}
+            </ul>
+          </Box>
+        )}
+      </Box>
 
       {/* For handling form data */}
       <input type="hidden" value={selectedItems} name={name} />
-    </div>
+    </Box>
   )
 }

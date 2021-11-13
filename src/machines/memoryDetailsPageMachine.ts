@@ -77,13 +77,11 @@ const memoryDetailsPageMachine = (
           },
         },
       },
-
       error: {
         on: {
           RETRY: 'loading',
         },
       },
-
       loaded: {
         on: {
           DELETE: {
@@ -94,14 +92,12 @@ const memoryDetailsPageMachine = (
           },
         },
       },
-
       confirmingDeletion: {
         on: {
           CONFIRM_DELETION: 'deleting',
           CANCEL_DELETION: 'loaded',
         },
       },
-
       deleting: {
         invoke: {
           src: () => {
@@ -115,7 +111,6 @@ const memoryDetailsPageMachine = (
           },
         },
       },
-
       submitting: {
         invoke: {
           src: (_ctx, event: any) => {
@@ -161,6 +156,8 @@ const memoryDetailsPageMachine = (
     },
   }
 
+  // TODO: Not sure why TypeScript is yelling at me here
+  /* @ts-expect-error */
   return createMachine(machineConfig, machineOptions)
 }
 
