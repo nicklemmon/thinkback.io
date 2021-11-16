@@ -4,7 +4,6 @@ import {
   Box,
   FormLabel,
   HStack,
-  IconButton,
   ListItem,
   Tag,
   TagLabel,
@@ -31,13 +30,8 @@ export function MultiSelect({
   defaultValue?: MultiSelectOptions
   itemToString?: (arg: any) => string
 }) {
-  const {
-    getSelectedItemProps,
-    getDropdownProps,
-    addSelectedItem,
-    removeSelectedItem,
-    selectedItems,
-  } = useMultipleSelection({ initialSelectedItems: defaultValue.map(itemToString) })
+  const { getSelectedItemProps, addSelectedItem, removeSelectedItem, selectedItems } =
+    useMultipleSelection({ initialSelectedItems: defaultValue.map(itemToString) })
   const hasSelectedItems = Boolean(selectedItems.length)
 
   const formattedOptions: string[] | [] = options.map(itemToString)
@@ -46,14 +40,7 @@ export function MultiSelect({
     return options.filter(option => selectedItems.indexOf(option) < 0)
   }
 
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    highlightedIndex,
-    getItemProps,
-  } = useSelect({
+  const { isOpen, getLabelProps, getMenuProps, getItemProps, openMenu } = useSelect({
     selectedItem: null,
     defaultHighlightedIndex: 0, // after selection, highlight the first item.
     items: getFilteredItems(formattedOptions),
@@ -89,6 +76,8 @@ export function MultiSelect({
     <Box>
       <FormLabel {...getLabelProps()}>{label}</FormLabel>
 
+      {/* This is styled like the `Input` component */}
+      {/* TODO: Handle focus styles */}
       <Box
         w="100%"
         borderWidth="1px"
@@ -96,6 +85,8 @@ export function MultiSelect({
         paddingY={2}
         paddingX={4}
         position="relative"
+        tabIndex={0}
+        onFocus={openMenu}
       >
         {!hasSelectedItems ? (
           <Box as="span" aria-hidden="true" color="gray.500">
@@ -124,17 +115,11 @@ export function MultiSelect({
           </HStack>
         </Box>
 
-        <Box position="absolute" right="0" top="0">
-          <IconButton
-            aria-label="Make a selection"
-            variant="ghost"
-            icon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            isDisabled={disabled}
-            {...getToggleButtonProps(getDropdownProps({ preventKeyAction: isOpen }))}
-          />
+        <Box position="absolute" right="0" top="0" paddingY={2} paddingX={4}>
+          {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </Box>
 
-        {isOpen && (
+        {isOpen && formattedOptions.length ? (
           <Box
             position="absolute"
             top="100%"
@@ -159,7 +144,7 @@ export function MultiSelect({
               ))}
             </ul>
           </Box>
-        )}
+        ) : null}
       </Box>
 
       {/* For handling form data */}

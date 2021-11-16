@@ -1,5 +1,7 @@
+import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { Page } from 'src/components'
-import { Link } from 'src/components/chakra'
+import { formatDate } from 'src/helpers/date'
+import { Button, Link, Stat, StatLabel, StatNumber, VStack } from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {
@@ -8,9 +10,30 @@ export function KidDetailsPage() {
 
   return (
     <Page>
-      <Page.Title>{kidName ? `Kid Details for ${kidName}` : 'Kid Details'}</Page.Title>
+      <Page.Header>
+        <Page.Title>Kid Details</Page.Title>
 
-      <Link to="/kids">Back to Kids</Link>
+        <div>
+          <Button
+            as={Link}
+            colorScheme="blue"
+            variant="ghost"
+            to="/kids"
+            leftIcon={<ArrowBackIcon />}
+          >
+            Back to Kids
+          </Button>
+
+          <Button
+            colorScheme="red"
+            variant="outline"
+            isDisabled={state.matches('loading') || state.matches('deleting')}
+            onClick={() => send({ type: 'DELETE', id: state.context.kid?.objectId })}
+          >
+            Delete Kid
+          </Button>
+        </div>
+      </Page.Header>
 
       <Page.Content>
         {state.matches('loading') || state.matches('deleting') ? <p>Loading...</p> : null}
@@ -42,22 +65,30 @@ export function KidDetailsPage() {
         ) : null}
 
         {state.matches('loaded') && state.context.kid ? (
-          <>
-            <div>Name: {kidName}</div>
+          <VStack>
+            <Stat>
+              <StatLabel>Name</StatLabel>
 
-            <div>Created Date: {state.context.kid.createdAt}</div>
+              <StatNumber>{kidName}</StatNumber>
+            </Stat>
 
-            <Link to={`/memories?kid=${state.context.kid.objectId}`}>
-              See memories for {kidName}
-            </Link>
+            {state.context.kid.createdAt ? (
+              <Stat>
+                <StatLabel>Created Date</StatLabel>
+                <StatNumber>{formatDate(new Date(state.context.kid.createdAt))}</StatNumber>
+              </Stat>
+            ) : null}
 
-            <button
-              type="button"
-              onClick={() => send({ type: 'DELETE', id: state.context.kid?.objectId })}
+            <Button
+              as={Link}
+              colorScheme="blue"
+              rightIcon={<ArrowForwardIcon />}
+              variant="outline"
+              to={`/memories?kid=${state.context.kid.objectId}`}
             >
-              Delete {kidName}
-            </button>
-          </>
+              See memories for {kidName}
+            </Button>
+          </VStack>
         ) : null}
       </Page.Content>
     </Page>

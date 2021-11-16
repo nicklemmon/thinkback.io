@@ -8,14 +8,15 @@ export function KidsPage() {
 
   return (
     <Page>
-      <Page.Title>Kids</Page.Title>
+      <Page.Header>
+        <Page.Title>Kids</Page.Title>
 
-      <Page.Content>
-        {/* @ts-expect-error */}
         <Button colorScheme="blue" as={Link} to="/kids/add">
           Add a Kid
         </Button>
+      </Page.Header>
 
+      <Page.Content>
         {state.matches('loading') && <p>Loading....</p>}
 
         {state.matches('error') && (

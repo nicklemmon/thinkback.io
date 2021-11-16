@@ -9,7 +9,6 @@ type MemoryDetailsPageParams = {
 
 export function useMemoryDetailsPageMachine() {
   const params = useParams<MemoryDetailsPageParams>()
-  console.log('params', params)
   const history = useHistory()
   const { showToast } = useToast()
   const machine = memoryDetailsPageMachine(params, history, showToast)

@@ -1,5 +1,6 @@
 import { Page } from 'src/components'
 import { useMachine } from '@xstate/react'
+import { Spinner, Stat, StatLabel, StatNumber, VStack } from 'src/components/chakra'
 import { profilePageMachine } from 'src/machines'
 
 export function ProfilePage() {
@@ -7,10 +8,12 @@ export function ProfilePage() {
 
   return (
     <Page>
-      <Page.Title>Profile</Page.Title>
+      <Page.Header>
+        <Page.Title>Profile</Page.Title>
+      </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') && <p>Loading....</p>}
+        {state.matches('loading') && <Spinner />}
 
         {state.matches('error') && (
           <p>
@@ -20,11 +23,19 @@ export function ProfilePage() {
         )}
 
         {state.matches('success') && (
-          <>
-            <p>Username: {state.context.user?.username}</p>
+          <VStack>
+            <Stat>
+              <StatLabel>Username</StatLabel>
 
-            <p>Email: {state.context.user?.email}</p>
-          </>
+              <StatNumber>{state.context.user?.username}</StatNumber>
+            </Stat>
+
+            <Stat>
+              <StatLabel>Email</StatLabel>
+
+              <StatNumber>{state.context.user?.email}</StatNumber>
+            </Stat>
+          </VStack>
         )}
       </Page.Content>
     </Page>

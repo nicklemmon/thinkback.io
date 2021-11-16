@@ -9,6 +9,7 @@ type AddMemoryPageMachineContext = {
 type AddMemoryPageMachineSchema = {
   states: {
     editing: {}
+    success: {}
     loading: {}
   }
 }
@@ -39,13 +40,18 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
           },
         },
       },
+      success: {
+        after: {
+          250: 'editing', // Near immediate transition - this is used to trigger a form reset
+        },
+      },
       loading: {
         invoke: {
           // TODO: Boo any :(
           src: (_ctx: AddMemoryPageMachineContext, event: any) => createMemory(event.memory),
           onDone: {
             actions: 'handleSuccess',
-            target: 'editing',
+            target: 'success',
           },
           onError: {
             actions: 'handleError',
@@ -61,7 +67,7 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
       handleError: () => {
         return showToast({ message: 'Memory creation failed. Try again.', variant: 'error' })
       },
-      handleSuccess: () => {
+      handleSuccess: (_ctx: any, event: any) => {
         return showToast({ message: 'Memory added', variant: 'success' })
       },
     },

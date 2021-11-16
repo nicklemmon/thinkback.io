@@ -1,5 +1,5 @@
 import React from 'react'
-import { Page } from 'src/components'
+import { Form, Page } from 'src/components'
 import { Link } from 'src/components/chakra'
 
 type HandleLoginParams = {
@@ -27,10 +27,12 @@ export function LoginPage({ handleLogin }: LoginProps) {
 
   return (
     <Page>
-      <Page.Title>Login Page</Page.Title>
+      <Page.Header>
+        <Page.Title>Login Page</Page.Title>
+      </Page.Header>
 
       <Page.Content>
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
           <div>
             <label htmlFor="username">Username</label>
             <input type="text" name="username" id="username" autoComplete="username" />
@@ -42,7 +44,7 @@ export function LoginPage({ handleLogin }: LoginProps) {
           </div>
 
           <input type="submit" value="Log In" />
-        </form>
+        </Form>
 
         <p>
           First time? <Link to="/sign-up">Sign Up</Link>

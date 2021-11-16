@@ -1,4 +1,5 @@
 import React from 'react'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 import { ButtonWrapper, Form, MultiSelect, Page } from 'src/components'
 import {
   Button,
@@ -6,6 +7,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Spinner,
   Textarea,
   VStack,
 } from 'src/components/chakra'
@@ -53,16 +55,33 @@ export function MemoryDetailsPage() {
 
   return (
     <Page>
-      <Page.Title>Memory Details</Page.Title>
+      <Page.Header>
+        <Page.Title>Memory Details</Page.Title>
 
-      <Link to="/memories">Back to Memories</Link>
+        <div>
+          <Button
+            as={Link}
+            colorScheme="blue"
+            variant="ghost"
+            to="/memories"
+            leftIcon={<ArrowBackIcon />}
+          >
+            Back to Memories
+          </Button>
 
-      <Button colorScheme="blue" onClick={() => send({ type: 'DELETE', id: memory?.objectId })}>
-        Delete Memory
-      </Button>
+          <Button
+            colorScheme="red"
+            variant="outline"
+            onClick={() => send({ type: 'DELETE', id: memory?.objectId })}
+            isDisabled={state.matches('loading') || state.matches('deleting')}
+          >
+            Delete Memory
+          </Button>
+        </div>
+      </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') || state.matches('deleting') ? <p>Loading...</p> : null}
+        {state.matches('loading') || state.matches('deleting') ? <Spinner /> : null}
 
         {state.matches('notFound') ? <p>Kid not found.</p> : null}
 

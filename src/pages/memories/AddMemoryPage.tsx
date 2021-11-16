@@ -1,6 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Form, MultiSelect, Page } from 'src/components'
-import { Link } from 'src/components/chakra'
+import {
+  Button,
+  Link,
+  FormControl,
+  FormLabel,
+  Input,
+  Textarea,
+  VStack,
+} from 'src/components/chakra'
 import { useAddMemoryPage } from 'src/hooks'
 import { formatDate } from 'src/helpers/date'
 import { Tag } from 'src/types'
@@ -33,58 +42,71 @@ export function AddMemoryPage() {
 
   return (
     <Page>
-      <Page.Title>Add Memory</Page.Title>
+      <Page.Header>
+        <Page.Title>Add Memory</Page.Title>
 
-      <Link to="/memories">Back to Memories</Link>
+        <Button
+          as={Link}
+          colorScheme="blue"
+          variant="ghost"
+          to="/memories"
+          leftIcon={<ArrowBackIcon />}
+        >
+          Back to Memories
+        </Button>
+      </Page.Header>
 
       <Page.Content>
-        <Form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">Title</label>
+        <Form onSubmit={handleSubmit} shouldReset={state.matches('success')}>
+          <VStack>
+            <FormControl id="title">
+              <FormLabel>Title</FormLabel>
 
-            <input
-              type="text"
-              name="title"
-              id="title"
-              disabled={state.matches('loading')}
-              required
-            />
-          </div>
+              <Input
+                type="text"
+                name="title"
+                isDisabled={state.matches('loading') || state.matches('success')}
+                isRequired
+              />
+            </FormControl>
 
-          <div>
-            <label htmlFor="summary">Summary</label>
+            <FormControl id="summary">
+              <FormLabel>Summary</FormLabel>
 
-            <textarea name="summary" id="summary" disabled={state.matches('loading')} />
-          </div>
+              <Textarea
+                name="summary"
+                isDisabled={state.matches('loading') || state.matches('success')}
+              />
+            </FormControl>
 
-          <div>
-            <label htmlFor="recorded-date">Memory Date</label>
+            <FormControl id="recorded-date">
+              <FormLabel>Memory Date</FormLabel>
 
-            <input
-              type="date"
-              name="recordedDate"
-              id="recorded-date"
-              defaultValue={formatDate(new Date())}
-              max={formatDate(new Date())}
-              disabled={state.matches('loading')}
-              required
-            />
-          </div>
+              <Input
+                type="date"
+                name="recordedDate"
+                defaultValue={formatDate(new Date())}
+                max={formatDate(new Date())}
+                isDisabled={state.matches('loading') || state.matches('success')}
+                isRequired
+              />
+            </FormControl>
 
-          <div>
-            <MultiSelect
-              label="Tags"
-              id="tags"
-              name="tags"
-              options={TAG_OPTIONS}
-              disabled={state.matches('loading')}
-              itemToString={(option: Tag) => option.name}
-            />
-          </div>
+            <FormControl>
+              <MultiSelect
+                label="Tags"
+                id="tags"
+                name="tags"
+                options={TAG_OPTIONS}
+                disabled={state.matches('loading') || state.matches('success')}
+                itemToString={(option: Tag) => option.name}
+              />
+            </FormControl>
 
-          <button type="submit" disabled={state.matches('loading')}>
-            Add Memory
-          </button>
+            <Button colorScheme="blue" type="submit" isLoading={state.matches('loading')}>
+              Add Memory
+            </Button>
+          </VStack>
         </Form>
       </Page.Content>
     </Page>

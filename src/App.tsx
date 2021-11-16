@@ -14,7 +14,7 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { ProtectedRoute, ToastList } from 'src/components'
+import { Header, ProtectedRoute, ToastList } from 'src/components'
 import { Link } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
@@ -31,11 +31,9 @@ function AppContent() {
   const [state, send] = useAuthMachine()
   const authorized = state.matches('authorized')
 
-  console.log('state.value', state.value)
-
   return (
     <>
-      <header>
+      <Header>
         <Link to={authorized ? '/dashboard' : '/auth'}>Memories App</Link>
 
         {authorized ? (
@@ -61,7 +59,7 @@ function AppContent() {
             <button onClick={() => send({ type: 'LOG_OUT' })}>Log Out</button>
           </nav>
         ) : null}
-      </header>
+      </Header>
 
       <main>
         <Switch>
