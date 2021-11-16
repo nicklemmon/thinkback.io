@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { Form, MultiSelect, Page } from 'src/components'
 import {
