@@ -83,13 +83,14 @@ export function MultiSelect({
         borderWidth="1px"
         borderRadius="md"
         paddingY={2}
-        paddingX={4}
+        paddingLeft={4}
+        paddingRight={2}
         position="relative"
         tabIndex={0}
         onFocus={openMenu}
       >
         {!hasSelectedItems ? (
-          <Box as="span" aria-hidden="true" color="gray.500">
+          <Box as="span" aria-hidden="true" color="gray.700">
             {placeholder ? placeholder : 'Make a selection'}
           </Box>
         ) : null}
@@ -115,11 +116,11 @@ export function MultiSelect({
           </HStack>
         </Box>
 
-        <Box position="absolute" right="0" top="0" paddingY={2} paddingX={4}>
-          {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        <Box position="absolute" right="0" top="0" paddingY={2} paddingX={3}>
+          {isOpen ? <ChevronUpIcon w={5} h={5} /> : <ChevronDownIcon w={5} h={5} />}
         </Box>
 
-        {isOpen && formattedOptions.length ? (
+        {isOpen && getFilteredItems(formattedOptions).length ? (
           <Box
             position="absolute"
             top="100%"
