@@ -14,7 +14,7 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { Header, ProtectedRoute, ToastList } from 'src/components'
+import { Header, ProtectedRoute } from 'src/components'
 import { Link } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
@@ -136,8 +136,6 @@ function AppContent() {
             <NotFoundPage />
           </Route>
         </Switch>
-
-        <ToastList />
       </main>
 
       <footer></footer>
