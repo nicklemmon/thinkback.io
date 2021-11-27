@@ -121,7 +121,7 @@ export function AddMemoryPage() {
               />
             </FormControl>
 
-            <Button level="primary" type="submit" issubmitting={state.matches('submitting')}>
+            <Button level="primary" type="submit" isLoading={state.matches('submitting')}>
               Add Memory
             </Button>
           </VStack>

@@ -1,6 +1,7 @@
 import React from 'react'
-import { Page } from 'src/components'
-import { Link } from 'src/components/chakra'
+import { Link as RouterLink } from 'react-router-dom'
+import { Form, Page } from 'src/components'
+import { Box, Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
 
 type HandleSignUpParams = {
   username: string
@@ -30,31 +31,43 @@ export function SignUpPage({ handleSignUp }: SignUpProps) {
 
   return (
     <Page>
-      <Page.Title>Sign Up</Page.Title>
+      <Page.Header>
+        <Page.Title>Sign Up</Page.Title>
+      </Page.Header>
 
       <Page.Content>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" autoComplete="username" />
-          </div>
+        <Form onSubmit={handleSubmit}>
+          <VStack>
+            <FormControl id="username">
+              <FormLabel>Username</FormLabel>
 
-          <div>
-            <label htmlFor="email">Email</label>
-            <input type="text" name="email" id="email" autoComplete="email" />
-          </div>
+              <Input type="text" name="username" autoComplete="username" />
+            </FormControl>
 
-          <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="password" autoComplete="current-password" />
-          </div>
+            <FormControl id="email">
+              <FormLabel>Email</FormLabel>
 
-          <input type="submit" value="Sign Up" />
-        </form>
+              <Input type="text" name="email" autoComplete="email" />
+            </FormControl>
 
-        <p>
-          Already signed up? <Link to="/auth">Log in.</Link>
-        </p>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+
+              <Input type="password" name="password" autoComplete="current-password" />
+            </FormControl>
+
+            <Button level="primary">Sign Up</Button>
+          </VStack>
+        </Form>
+
+        <Box marginTop="5">
+          <p>
+            Already signed up?{' '}
+            <Link as={RouterLink} to="/auth">
+              Log in.
+            </Link>
+          </p>
+        </Box>
       </Page.Content>
     </Page>
   )

@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { Form, Page } from 'src/components'
-import { Link } from 'src/components/chakra'
+import { Box, Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
 
 type HandleLoginParams = {
   username: string
@@ -33,22 +34,33 @@ export function LoginPage({ handleLogin }: LoginProps) {
 
       <Page.Content>
         <Form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" autoComplete="username" />
-          </div>
+          <VStack>
+            <FormControl id="username">
+              <FormLabel htmlFor="username">Username</FormLabel>
 
-          <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="password" autoComplete="current-password" />
-          </div>
+              <Input type="text" name="username" autoComplete="username" />
+            </FormControl>
 
-          <input type="submit" value="Log In" />
+            <FormControl id="password">
+              <FormLabel htmlFor="password">Password</FormLabel>
+
+              <Input type="password" name="password" autoComplete="current-password" />
+            </FormControl>
+
+            <Button level="primary" type="submit">
+              Log In
+            </Button>
+          </VStack>
         </Form>
 
-        <p>
-          First time? <Link to="/sign-up">Sign Up</Link>
-        </p>
+        <Box marginTop="5">
+          <p>
+            First time?{' '}
+            <Link as={RouterLink} to="/sign-up">
+              Sign Up
+            </Link>
+          </p>
+        </Box>
       </Page.Content>
     </Page>
   )
