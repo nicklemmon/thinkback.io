@@ -6,5 +6,5 @@ import { LinkProps as ChakraLinkProps } from '@chakra-ui/layout'
 type LinkProps = ReactRouterLinkProps & ChakraLinkProps
 
 export function Link(props: LinkProps) {
-  return <ChakraLink as={RouterLink} {...props} />
+  return <ChakraLink as={RouterLink} color="purple.600" textDecor="underline" {...props} />
 }

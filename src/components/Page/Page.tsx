@@ -27,7 +27,7 @@ function Page({ children }: PageProps) {
 
 function PageHeader({ children }: PageHeaderProps) {
   return (
-    <Box paddingX="12" paddingY="6">
+    <Box paddingX="12" paddingTop="6" paddingBottom="3">
       <VStack spacing={6}>{children}</VStack>
     </Box>
   )
@@ -49,7 +49,7 @@ function PageTitle({ children }: PageTitleProps) {
 
 function PageContent({ children }: PageContentProps) {
   return (
-    <Box paddingX="12" paddingY="6">
+    <Box paddingX="12" paddingTop="6" paddingBottom="3">
       {children}
     </Box>
   )

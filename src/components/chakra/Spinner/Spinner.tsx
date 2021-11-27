@@ -4,5 +4,5 @@ import { SpinnerProps as ChakraSpinnerProps } from '@chakra-ui/spinner'
 type SpinnerProps = ChakraSpinnerProps
 
 export function Spinner(props: SpinnerProps) {
-  return <ChakraSpinner color="blue.500" {...props} />
+  return <ChakraSpinner color="purple.700" size="lg" {...props} />
 }

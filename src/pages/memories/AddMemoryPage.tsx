@@ -7,11 +7,13 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Select,
   Textarea,
   VStack,
 } from 'src/components/chakra'
 import { useAddMemoryPage } from 'src/hooks'
 import { formatDate } from 'src/helpers/date'
+import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { TAG_OPTIONS } from 'src/constants'
 
@@ -24,11 +26,14 @@ export function AddMemoryPage() {
     const target = e.target as typeof e.target & {
       title: { value: string }
       summary: { value: string }
+      kid: { value: string }
       recordedDate: { value: Date }
       tags: { value: string }
     }
     const title = target.title.value
     const summary = target.summary.value
+    const kidId = target.kid.value
+    const kid = state.context.kids ? getKidById(state.context?.kids, kidId) : undefined
     const recordedDate = new Date(target.recordedDate.value)
     const tags = target.tags.value ? target.tags.value.split(',') : []
     const formattedTags = tags.map(tag => {
@@ -37,7 +42,10 @@ export function AddMemoryPage() {
       }
     })
 
-    return send({ type: 'SUBMIT', memory: { title, summary, recordedDate, tags: formattedTags } })
+    return send({
+      type: 'SUBMIT',
+      memory: { title, kid, summary, recordedDate, tags: formattedTags },
+    })
   }
 
   return (
@@ -45,13 +53,7 @@ export function AddMemoryPage() {
       <Page.Header>
         <Page.Title>Add Memory</Page.Title>
 
-        <Button
-          as={Link}
-          colorScheme="blue"
-          variant="ghost"
-          to="/memories"
-          leftIcon={<ArrowBackIcon />}
-        >
+        <Button as={Link} level="tertiary" to="/memories" leftIcon={<ArrowBackIcon />}>
           Back to Memories
         </Button>
       </Page.Header>
@@ -65,9 +67,25 @@ export function AddMemoryPage() {
               <Input
                 type="text"
                 name="title"
-                isDisabled={state.matches('loading') || state.matches('success')}
+                isDisabled={state.matches('submitting') || state.matches('success')}
                 isRequired
               />
+            </FormControl>
+
+            <FormControl id="kid">
+              <FormLabel>Kid</FormLabel>
+
+              <Select name="kid">
+                {state.context.kids?.map(kid => {
+                  return (
+                    <>
+                      <option key={kid.id} value={kid.id}>
+                        {kid.get('name')}
+                      </option>
+                    </>
+                  )
+                })}
+              </Select>
             </FormControl>
 
             <FormControl id="summary">
@@ -75,7 +93,7 @@ export function AddMemoryPage() {
 
               <Textarea
                 name="summary"
-                isDisabled={state.matches('loading') || state.matches('success')}
+                isDisabled={state.matches('submitting') || state.matches('success')}
               />
             </FormControl>
 
@@ -87,7 +105,7 @@ export function AddMemoryPage() {
                 name="recordedDate"
                 defaultValue={formatDate(new Date())}
                 max={formatDate(new Date())}
-                isDisabled={state.matches('loading') || state.matches('success')}
+                isDisabled={state.matches('submitting') || state.matches('success')}
                 isRequired
               />
             </FormControl>
@@ -98,12 +116,12 @@ export function AddMemoryPage() {
                 id="tags"
                 name="tags"
                 options={TAG_OPTIONS}
-                disabled={state.matches('loading') || state.matches('success')}
+                disabled={state.matches('submitting') || state.matches('success')}
                 itemToString={(option: Tag) => option.name}
               />
             </FormControl>
 
-            <Button colorScheme="blue" type="submit" isLoading={state.matches('loading')}>
+            <Button level="primary" type="submit" issubmitting={state.matches('submitting')}>
               Add Memory
             </Button>
           </VStack>

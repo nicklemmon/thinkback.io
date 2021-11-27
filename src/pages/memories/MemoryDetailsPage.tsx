@@ -6,12 +6,15 @@ import {
   Link,
   FormControl,
   FormLabel,
+  HStack,
   Input,
+  Select,
   Spinner,
   Textarea,
   VStack,
 } from 'src/components/chakra'
 import { formatDate } from 'src/helpers/date'
+import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
 import { TAG_OPTIONS } from 'src/constants'
@@ -21,18 +24,21 @@ export function MemoryDetailsPage() {
   const [state, send] = useMemoryDetailsPageMachine()
   // This casting shouldn't be necessary - but was intermittently encountering an error otherwise
   const { memory } = state.context as MemoryDetailsPageMachineContext
-  const memoryTitle = memory?.title
+  const memoryTitle = memory?.get('title')
 
   function handleSubmit(e: React.SyntheticEvent) {
     const target = e.target as typeof e.target & {
       title: { value: string }
       summary: { value: string }
+      kid: { value: string }
       recordedDate: { value: Date }
       tags: { value: string }
     }
 
     const title = target.title.value
     const summary = target.summary.value
+    const kidId = target.kid.value
+    const kid = state.context.kids ? getKidById(state.context?.kids, kidId) : undefined
     const recordedDate = new Date(target.recordedDate.value)
     const tags = target.tags.value ? target.tags.value.split(',') : []
     const formattedTags = tags.map(tag => {
@@ -40,8 +46,10 @@ export function MemoryDetailsPage() {
         name: tag,
       }
     })
+
     const updatedMemory = {
       ...memory,
+      kid,
       title,
       summary,
       recordedDate,
@@ -58,26 +66,19 @@ export function MemoryDetailsPage() {
       <Page.Header>
         <Page.Title>Memory Details</Page.Title>
 
-        <div>
-          <Button
-            as={Link}
-            colorScheme="blue"
-            variant="ghost"
-            to="/memories"
-            leftIcon={<ArrowBackIcon />}
-          >
+        <HStack>
+          <Button as={Link} level="tertiary" to="/memories" leftIcon={<ArrowBackIcon />}>
             Back to Memories
           </Button>
 
           <Button
-            colorScheme="red"
-            variant="outline"
-            onClick={() => send({ type: 'DELETE', id: memory?.objectId })}
+            level="destructive"
+            onClick={() => send({ type: 'DELETE', id: memory?.id })}
             isDisabled={state.matches('loading') || state.matches('deleting')}
           >
             Delete Memory
           </Button>
-        </div>
+        </HStack>
       </Page.Header>
 
       <Page.Content>
@@ -115,13 +116,27 @@ export function MemoryDetailsPage() {
               <FormControl id="title">
                 <FormLabel>Title</FormLabel>
 
-                <Input type="text" id="title" defaultValue={memory.title} />
+                <Input name="title" type="text" defaultValue={memory.get('title')} />
+              </FormControl>
+
+              <FormControl id="kid">
+                <FormLabel>Kid</FormLabel>
+
+                <Select name="kid" defaultValue={memory.get('kid')?.id}>
+                  {state.context.kids?.map(kid => {
+                    return (
+                      <option key={kid.id} value={kid.id}>
+                        {kid.get('name')}
+                      </option>
+                    )
+                  })}
+                </Select>
               </FormControl>
 
               <FormControl id="summary">
                 <FormLabel>Summary</FormLabel>
 
-                <Textarea name="summary" defaultValue={memory.summary} />
+                <Textarea name="summary" defaultValue={memory.get('summary')} />
               </FormControl>
 
               <FormControl id="recorded-date">
@@ -130,8 +145,7 @@ export function MemoryDetailsPage() {
                 <Input
                   type="date"
                   name="recordedDate"
-                  id="recorded-date"
-                  defaultValue={formatDate(new Date(memory.recordedDate.iso))}
+                  defaultValue={formatDate(new Date(memory.get('recordedDate') as unknown as Date))}
                   max={formatDate(new Date())}
                   isDisabled={state.matches('loading')}
                   isRequired
@@ -144,17 +158,17 @@ export function MemoryDetailsPage() {
                   id="tags"
                   name="tags"
                   options={TAG_OPTIONS}
-                  defaultValue={memory.tags}
+                  defaultValue={memory.get('tags')}
                   itemToString={(option: Tag) => option.name}
                 />
               </FormControl>
 
               <ButtonWrapper>
-                <Button colorScheme="blue" type="submit">
+                <Button level="primary" type="submit">
                   Save
                 </Button>
 
-                <Button colorScheme="blue" variant="outline">
+                <Button level="secondary" variant="outline">
                   Cancel
                 </Button>
               </ButtonWrapper>

@@ -31,13 +31,7 @@ export function AddKidPage() {
       <Page.Header>
         <Page.Title>Add a Kid</Page.Title>
 
-        <Button
-          as={Link}
-          colorScheme="blue"
-          variant="ghost"
-          to="/kids"
-          leftIcon={<ArrowBackIcon />}
-        >
+        <Button as={Link} level="tertiary" to="/kids" leftIcon={<ArrowBackIcon />}>
           Back to Kids
         </Button>
       </Page.Header>
@@ -69,7 +63,7 @@ export function AddKidPage() {
               />
             </FormControl>
 
-            <Button colorScheme="blue" type="submit" isLoading={state.matches('loading')}>
+            <Button level="primary" type="submit" isLoading={state.matches('loading')}>
               Add Kid
             </Button>
           </VStack>

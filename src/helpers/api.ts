@@ -37,7 +37,7 @@ export async function getMemories() {
 
   return query
     .find({ sessionToken })
-    .then(res => parseResponse(res))
+    .then(res => res)
     .catch(err => Promise.reject(err))
 }
 
@@ -51,32 +51,40 @@ export async function getMemory(id: string) {
 
   return query
     .first({ sessionToken })
-    .then(res => parseResponse(res))
+    .then(res => res)
     .catch(err => Promise.reject(err))
 }
 
 export async function updateMemory(memory: Memory) {
-  const { title, summary, recordedDate, tags } = memory
+  const { title, summary, recordedDate, tags, kid } = memory
   const Memory = Parse.Object.extend('memory')
   const query = new Parse.Query(Memory)
   const currentUser = getCurrentUser()
   const sessionToken = getSessionToken(currentUser)
 
-  return query.get(memory.objectId).then(object => {
+  /* @ts-expect-error */
+  return query.get(memory.id).then(object => {
     if (title) object.set('title', title)
+
     if (summary) object.set('summary', summary)
+
     if (recordedDate) object.set('recordedDate', recordedDate)
+
     if (tags) object.set('tags', tags)
+
+    if (kid) object.set('kid', kid)
 
     return object
       .save({ sessionToken })
-      .then(res => Promise.resolve(res))
-      .catch(err => Promise.reject(err))
+      .then(res => res)
+      .catch(err => {
+        return Promise.reject(err)
+      })
   })
 }
 
 export async function createMemory(memory: NewMemory) {
-  const { title, summary, tags, recordedDate } = memory
+  const { title, summary, tags, recordedDate, kid } = memory
   const Memory = Parse.Object.extend('memory')
   const object = new Memory()
   const currentUser = getCurrentUser()
@@ -86,6 +94,7 @@ export async function createMemory(memory: NewMemory) {
   object.set('summary', summary)
   object.set('tags', tags)
   object.set('recordedDate', recordedDate)
+  object.set('kid', kid)
   object.setACL(currentUser)
 
   return object
@@ -140,7 +149,7 @@ export async function getKids() {
 
   return query
     .find({ sessionToken })
-    .then(res => parseResponse(res))
+    .then(res => res)
     .catch(err => Promise.reject(err))
 }
 

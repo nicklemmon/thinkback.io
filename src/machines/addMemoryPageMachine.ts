@@ -1,8 +1,9 @@
-import { createMachine, MachineConfig } from 'xstate'
-import { NewMemory, Toast } from 'src/types'
-import { createMemory } from 'src/helpers/api'
+import { assign, createMachine, MachineConfig } from 'xstate'
+import { Kid, NewMemory, Toast } from 'src/types'
+import { createMemory, getKids } from 'src/helpers/api'
 
 type AddMemoryPageMachineContext = {
+  kids: Parse.Object<Kid>[] | [] | undefined
   memory: NewMemory
 }
 
@@ -10,11 +11,13 @@ type AddMemoryPageMachineSchema = {
   states: {
     editing: {}
     success: {}
+    error: {}
     loading: {}
+    submitting: {}
   }
 }
 
-type AddKidPageMachineEvents = { type: 'SUBMIT'; memory: NewMemory }
+type AddKidPageMachineEvents = { type: 'SUBMIT'; memory: NewMemory } | { type: 'RETRY' }
 
 function addMemoryPageMachine(showToast: (toast: Toast) => void) {
   const machineConfig: MachineConfig<
@@ -23,8 +26,9 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
     AddKidPageMachineEvents
   > = {
     id: 'addMemoryPageMachine',
-    initial: 'editing',
+    initial: 'loading',
     context: {
+      kids: undefined,
       memory: {
         title: '',
         summary: '',
@@ -33,11 +37,29 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
       },
     },
     states: {
+      loading: {
+        invoke: {
+          src: () => getKids(),
+          onDone: {
+            target: 'editing',
+            actions: 'setDataToCtx',
+          },
+          onError: {
+            target: 'error',
+            actions: 'setErrorToCtx',
+          },
+        },
+      },
       editing: {
         on: {
           SUBMIT: {
-            target: 'loading',
+            target: 'submitting',
           },
+        },
+      },
+      error: {
+        on: {
+          RETRY: 'loading',
         },
       },
       success: {
@@ -45,10 +67,13 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
           250: 'editing', // Near immediate transition - this is used to trigger a form reset
         },
       },
-      loading: {
+      submitting: {
         invoke: {
           // TODO: Boo any :(
-          src: (_ctx: AddMemoryPageMachineContext, event: any) => createMemory(event.memory),
+          src: (_ctx: AddMemoryPageMachineContext, event: any) => {
+            console.log('event.memory', event.memory)
+            return createMemory(event.memory)
+          },
           onDone: {
             actions: 'handleSuccess',
             target: 'success',
@@ -64,6 +89,13 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
 
   const machineOptions = {
     actions: {
+      setDataToCtx: assign((_ctx, event: any) => {
+        console.log('event.data', event.data)
+        return { kids: event.data }
+      }),
+      setErrorToCtx: assign((_ctx, event: any) => {
+        return { error: event }
+      }),
       handleError: () => {
         return showToast({ message: 'Memory creation failed. Try again.', variant: 'error' })
       },
@@ -73,6 +105,7 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
     },
   }
 
+  /* @ts-expect-error */
   return createMachine(machineConfig, machineOptions)
 }
 

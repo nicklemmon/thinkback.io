@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link as RouterLink, NavLink } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
@@ -14,8 +14,8 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { Header, ProtectedRoute } from 'src/components'
-import { Link } from 'src/components/chakra'
+import { Header, HeaderNav, ProtectedRoute } from 'src/components'
+import { Button, Link, List, ListItem, HStack } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
@@ -34,30 +34,41 @@ function AppContent() {
   return (
     <>
       <Header>
-        <Link to={authorized ? '/dashboard' : '/auth'}>Memories App</Link>
+        <Link
+          fontWeight="700"
+          textDecor="none"
+          as={RouterLink}
+          to={authorized ? '/dashboard' : '/auth'}
+        >
+          Memories App
+        </Link>
 
         {authorized ? (
-          <nav>
-            <ul>
-              <li>
-                <NavLink to="/dashboard">Dashboard</NavLink>
-              </li>
+          <HeaderNav>
+            <HStack as={List}>
+              <ListItem>
+                <HeaderLink to="/dashboard">Dashboard</HeaderLink>
+              </ListItem>
 
-              <li>
-                <NavLink to="/kids">Kids</NavLink>
-              </li>
+              <ListItem>
+                <HeaderLink to="/kids">Kids</HeaderLink>
+              </ListItem>
 
-              <li>
-                <NavLink to="/memories">Memories</NavLink>
-              </li>
+              <ListItem>
+                <HeaderLink to="/memories">Memories</HeaderLink>
+              </ListItem>
 
-              <li>
-                <NavLink to="/profile">Profile</NavLink>
-              </li>
-            </ul>
+              <ListItem>
+                <HeaderLink to="/profile">Profile</HeaderLink>
+              </ListItem>
 
-            <button onClick={() => send({ type: 'LOG_OUT' })}>Log Out</button>
-          </nav>
+              <ListItem>
+                <Button level="secondary" size="sm" onClick={() => send({ type: 'LOG_OUT' })}>
+                  Log Out
+                </Button>
+              </ListItem>
+            </HStack>
+          </HeaderNav>
         ) : null}
       </Header>
 
@@ -140,5 +151,13 @@ function AppContent() {
 
       <footer></footer>
     </>
+  )
+}
+
+function HeaderLink({ children, to }: { children: React.ReactNode; to: string }) {
+  return (
+    <Link as={NavLink} to={to} textDecor="none" color="purple.500">
+      {children}
+    </Link>
   )
 }

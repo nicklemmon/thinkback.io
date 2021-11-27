@@ -1,6 +1,6 @@
 import { useMachine } from '@xstate/react'
 import { Page } from 'src/components'
-import { Button, Link } from 'src/components/chakra'
+import { Button, Link, Spinner } from 'src/components/chakra'
 import { kidsPageMachine } from 'src/machines/kidsPageMachine'
 
 export function KidsPage() {
@@ -11,13 +11,13 @@ export function KidsPage() {
       <Page.Header>
         <Page.Title>Kids</Page.Title>
 
-        <Button colorScheme="blue" as={Link} to="/kids/add">
+        <Button level="primary" as={Link} to="/kids/add">
           Add a Kid
         </Button>
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') && <p>Loading....</p>}
+        {state.matches('loading') && <Spinner />}
 
         {state.matches('error') && (
           <p>
@@ -30,8 +30,8 @@ export function KidsPage() {
           <ul>
             {state.context.kids.map(kid => {
               return (
-                <li key={kid.objectId}>
-                  <Link to={`/kids/${kid.objectId}`}>{kid.name}</Link>
+                <li key={kid.id}>
+                  <Link to={`/kids/${kid.id}`}>{kid.get('name')}</Link>
                 </li>
               )
             })}

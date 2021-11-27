@@ -3,7 +3,7 @@ import { Kid } from 'src/types'
 import { getKids } from 'src/helpers/api'
 
 type KidsPageMachineContext = {
-  kids: Kid[] | []
+  kids: Parse.Object<Kid>[] | []
   error: Object | undefined
 }
 

@@ -15,6 +15,7 @@ export type Memory = {
   createdAt: Date
   updatedAt: Date
   objectId: string
+  kid?: Parse.Object<Kid>
   summary?: string
   tags?: Tag[] | []
 }
@@ -23,6 +24,7 @@ export type NewMemory = {
   title: string
   recordedDate: Date
   summary?: string
+  kid?: Parse.Object<Kid>
   tags?: Tag[] | []
 }
 

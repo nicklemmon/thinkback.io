@@ -1,10 +1,11 @@
 import { createMachine, assign, MachineConfig } from 'xstate'
-import { Memory, Toast } from 'src/types'
-import { deleteMemory, getMemory, updateMemory } from 'src/helpers/api'
+import { Kid, Memory, Toast } from 'src/types'
+import { deleteMemory, getMemory, updateMemory, getKids } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
 export type MemoryDetailsPageMachineContext = {
-  memory: Memory | undefined
+  memory: Parse.Object<Memory> | undefined
+  kids: Parse.Object<Kid>[] | [] | undefined
   error: Object | undefined
 }
 
@@ -47,6 +48,7 @@ const memoryDetailsPageMachine = (
     initial: 'validatingParams',
     context: {
       memory: undefined,
+      kids: undefined,
       error: undefined,
     },
     states: {
@@ -61,15 +63,17 @@ const memoryDetailsPageMachine = (
           },
         ],
       },
-
       loading: {
         invoke: {
           src: () => {
-            return getMemory(queryStringParams.id ? queryStringParams.id : '')
+            return Promise.all([
+              getMemory(queryStringParams.id ? queryStringParams.id : ''),
+              getKids(),
+            ])
           },
           onDone: {
             target: 'loaded',
-            actions: 'setMemoryToCtx',
+            actions: 'setDataToCtx',
           },
           onError: {
             target: 'error',
@@ -113,9 +117,7 @@ const memoryDetailsPageMachine = (
       },
       submitting: {
         invoke: {
-          src: (_ctx, event: any) => {
-            return updateMemory(event.memory)
-          },
+          src: (_ctx, event: any) => updateMemory(event.memory as Memory),
           onDone: {
             target: 'loading',
             actions: 'handleSuccess',
@@ -140,9 +142,12 @@ const memoryDetailsPageMachine = (
 
   const machineOptions = {
     actions: {
-      setMemoryToCtx: assign((_ctx, event: any) => {
-        return { memory: event.data }
+      setDataToCtx: assign((_ctx, event: any) => {
+        const [memoryRes, kidsRes] = event.data
+
+        return { memory: memoryRes, kids: kidsRes }
       }),
+      // TODO: Fix this to handle `Promise.all` errors
       setErrorToCtx: assign((_ctx, event: any) => {
         return { error: event }
       }),

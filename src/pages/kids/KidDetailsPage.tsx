@@ -1,7 +1,7 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
-import { Button, Link, Stat, StatLabel, StatNumber, VStack } from 'src/components/chakra'
+import { Button, HStack, Link, Stat, StatLabel, StatNumber, VStack } from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {
@@ -13,26 +13,19 @@ export function KidDetailsPage() {
       <Page.Header>
         <Page.Title>Kid Details</Page.Title>
 
-        <div>
-          <Button
-            as={Link}
-            colorScheme="blue"
-            variant="ghost"
-            to="/kids"
-            leftIcon={<ArrowBackIcon />}
-          >
+        <HStack>
+          <Button as={Link} level="tertiary" to="/kids" leftIcon={<ArrowBackIcon />}>
             Back to Kids
           </Button>
 
           <Button
-            colorScheme="red"
-            variant="outline"
+            level="destructive"
             isDisabled={state.matches('loading') || state.matches('deleting')}
             onClick={() => send({ type: 'DELETE', id: state.context.kid?.objectId })}
           >
             Delete Kid
           </Button>
-        </div>
+        </HStack>
       </Page.Header>
 
       <Page.Content>
@@ -75,15 +68,15 @@ export function KidDetailsPage() {
             {state.context.kid.createdAt ? (
               <Stat>
                 <StatLabel>Created Date</StatLabel>
+
                 <StatNumber>{formatDate(new Date(state.context.kid.createdAt))}</StatNumber>
               </Stat>
             ) : null}
 
             <Button
               as={Link}
-              colorScheme="blue"
+              level="secondary"
               rightIcon={<ArrowForwardIcon />}
-              variant="outline"
               to={`/memories?kid=${state.context.kid.objectId}`}
             >
               See memories for {kidName}

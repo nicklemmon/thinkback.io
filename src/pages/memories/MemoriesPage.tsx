@@ -1,6 +1,14 @@
 import { useMachine } from '@xstate/react'
 import { Page } from 'src/components'
-import { Button, Link, Spinner } from 'src/components/chakra'
+import {
+  Button,
+  Link,
+  Spinner,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from 'src/components/chakra'
 import { memoriesPageMachine } from 'src/machines'
 
 export function MemoriesPage() {
@@ -11,7 +19,7 @@ export function MemoriesPage() {
       <Page.Header>
         <Page.Title>Memories</Page.Title>
 
-        <Button colorScheme="blue" as={Link} to="/memories/add">
+        <Button level="primary" as={Link} to="/memories/add">
           Add a Memory
         </Button>
       </Page.Header>
@@ -20,18 +28,21 @@ export function MemoriesPage() {
         {state.matches('loading') && <Spinner />}
 
         {state.matches('error') && (
-          <p>
-            Something went wrong. Try again.{' '}
-            <button onClick={() => send({ type: 'RETRY' })}>Retry</button>
-          </p>
+          <Alert status="error">
+            <AlertIcon />
+            <AlertTitle>Memories failed to load</AlertTitle>
+            <AlertDescription>
+              Please <button onClick={() => send('RETRY')}>try again</button>.
+            </AlertDescription>
+          </Alert>
         )}
 
         {state.matches('success') ? (
           <ul>
             {state.context.memories.map(memory => {
               return (
-                <li key={memory.objectId}>
-                  <Link to={`/memories/${memory.objectId}`}>{memory.title}</Link>
+                <li key={memory.id}>
+                  <Link to={`/memories/${memory.id}`}>{memory.get('title')}</Link>
                 </li>
               )
             })}
