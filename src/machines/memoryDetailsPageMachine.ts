@@ -20,11 +20,13 @@ type MemoryDetailsPageMachineSchema = {
     submitting: {}
     notFound: {}
     deleted: {}
+    resetting: {}
   }
 }
 
 type MemoryDetailsPageMachineEvents =
   | { type: 'RETRY' }
+  | { type: 'CANCEL' }
   | { type: 'CONFIRM_DELETION' }
   | { type: 'CANCEL_DELETION' }
   | { type: 'DELETE'; id: string | undefined }
@@ -63,6 +65,7 @@ const memoryDetailsPageMachine = (
           },
         ],
       },
+
       loading: {
         invoke: {
           src: () => {
@@ -81,11 +84,13 @@ const memoryDetailsPageMachine = (
           },
         },
       },
+
       error: {
         on: {
           RETRY: 'loading',
         },
       },
+
       loaded: {
         on: {
           DELETE: {
@@ -94,14 +99,25 @@ const memoryDetailsPageMachine = (
           SUBMIT: {
             target: 'submitting',
           },
+          CANCEL: {
+            target: 'resetting',
+          },
         },
       },
+
+      resetting: {
+        after: {
+          1: 'loaded',
+        },
+      },
+
       confirmingDeletion: {
         on: {
           CONFIRM_DELETION: 'deleting',
           CANCEL_DELETION: 'loaded',
         },
       },
+
       deleting: {
         invoke: {
           src: () => {
@@ -115,11 +131,12 @@ const memoryDetailsPageMachine = (
           },
         },
       },
+
       submitting: {
         invoke: {
           src: (_ctx, event: any) => updateMemory(event.memory as Memory),
           onDone: {
-            target: 'loading',
+            target: 'loaded',
             actions: 'handleSuccess',
           },
           onError: {
@@ -134,7 +151,7 @@ const memoryDetailsPageMachine = (
       },
 
       deleted: {
-        entry: ['redirectToMemoriesPage'],
+        entry: 'handleDeleted',
         type: 'final',
       },
     },
@@ -154,10 +171,14 @@ const memoryDetailsPageMachine = (
       handleSuccess: () => {
         return showToast({ message: 'Memory updated', variant: 'success' })
       },
+      handleDeleted: () => {
+        showToast({ message: 'Memory deleted', variant: 'success' })
+
+        return history.push('/memories')
+      },
       handleError: () => {
         return showToast({ message: 'Memory failed to update. Try again.', variant: 'error' })
       },
-      redirectToMemoriesPage: () => history.push('/memories'),
     },
   }
 

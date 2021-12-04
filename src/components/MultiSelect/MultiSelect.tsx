@@ -18,13 +18,13 @@ export function MultiSelect({
   name,
   placeholder,
   defaultValue = [],
-  disabled = false,
+  isDisabled = false,
   itemToString = arg => arg,
 }: {
   options: MultiSelectOptions
   label: string
   id: string
-  disabled?: boolean
+  isDisabled?: boolean
   name?: string
   placeholder?: string
   defaultValue?: MultiSelectOptions
@@ -73,7 +73,10 @@ export function MultiSelect({
   })
 
   return (
-    <Box>
+    <Box
+      pointerEvents={isDisabled ? 'none' : 'unset'}
+      cursor={isDisabled ? 'not-allowed' : 'unset'}
+    >
       <FormLabel {...getLabelProps()}>{label}</FormLabel>
 
       {/* This is styled like the `Input` component */}
@@ -106,7 +109,7 @@ export function MultiSelect({
 
                 <TagCloseButton
                   onClick={() => removeSelectedItem(selectedItem)}
-                  isDisabled={disabled}
+                  isDisabled={isDisabled}
                   aria-label="Remove Selected Item"
                 >
                   &#10005;

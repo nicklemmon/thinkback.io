@@ -2,7 +2,7 @@ import { assign, createMachine, MachineConfig } from 'xstate'
 import { Kid, NewMemory, Toast } from 'src/types'
 import { createMemory, getKids } from 'src/helpers/api'
 
-type AddMemoryPageMachineContext = {
+export type AddMemoryPageMachineContext = {
   kids: Parse.Object<Kid>[] | [] | undefined
   memory: NewMemory
 }

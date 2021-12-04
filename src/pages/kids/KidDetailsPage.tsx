@@ -1,7 +1,16 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
 import { Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
-import { Button, HStack, Link, Stat, StatLabel, StatNumber, VStack } from 'src/components/chakra'
+import {
+  Button,
+  HStack,
+  Link,
+  Spinner,
+  Stat,
+  StatLabel,
+  StatNumber,
+  VStack,
+} from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {
@@ -29,7 +38,7 @@ export function KidDetailsPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') || state.matches('deleting') ? <p>Loading...</p> : null}
+        {state.matches('loading') || state.matches('deleting') ? <Spinner /> : null}
 
         {state.matches('notFound') ? <p>Kid not found.</p> : null}
 

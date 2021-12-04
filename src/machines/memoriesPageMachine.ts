@@ -1,6 +1,6 @@
 import { createMachine, assign } from 'xstate'
 import { Memory } from 'src/types'
-import { getMemories } from 'src/helpers/api'
+import { getMemories, getKids } from 'src/helpers/api'
 
 type MemoriesPageMachineContext = {
   memories: Parse.Object<Memory>[] | []
@@ -20,7 +20,10 @@ const memoriesPageMachine = createMachine<MemoriesPageMachineContext, MemoriesPa
     states: {
       loading: {
         invoke: {
-          src: getMemories,
+          src: () => {
+            // kids data isn't being used directly, but pointers within memories are
+            return Promise.all([getMemories(), getKids()])
+          },
           onDone: {
             target: 'success',
             actions: 'setMemoriesToCtx',
@@ -46,7 +49,14 @@ const memoriesPageMachine = createMachine<MemoriesPageMachineContext, MemoriesPa
   {
     actions: {
       setMemoriesToCtx: assign((_ctx, event: any) => {
-        return { memories: event.data }
+        const [memories] = event.data
+        const sortedMemories = [...memories].sort(
+          (a: Parse.Object<Memory>, b: Parse.Object<Memory>) => {
+            /* @ts-expect-error */
+            return new Date(b.get('recordedDate')) - new Date(a.get('recordedDate'))
+          },
+        )
+        return { memories: sortedMemories }
       }),
       setErrorToCtx: assign((_ctx, event) => {
         return { error: event }

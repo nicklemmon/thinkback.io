@@ -1,12 +1,11 @@
 import { Link as RouterLink, NavLink } from 'react-router-dom'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
   AddMemoryPage,
   DashboardPage,
   KidDetailsPage,
   KidsPage,
-  LandingPage,
   LoginPage,
   MemoriesPage,
   MemoryDetailsPage,
@@ -75,7 +74,7 @@ function AppContent() {
       <main>
         <Switch>
           <Route path="/" exact>
-            <LandingPage />
+            <Redirect to="/dashboard" />
           </Route>
 
           <ProtectedRoute condition={!authorized} path="/auth" exact>

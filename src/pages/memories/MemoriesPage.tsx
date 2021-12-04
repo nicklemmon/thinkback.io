@@ -1,14 +1,21 @@
+import { HStack } from '@chakra-ui/layout'
 import { useMachine } from '@xstate/react'
-import { Page } from 'src/components'
+import { Card, Page } from 'src/components'
 import {
-  Button,
-  Link,
-  Spinner,
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Box,
+  Button,
+  Link,
+  Grid,
+  Spinner,
+  Tag,
+  Text,
+  VStack,
 } from 'src/components/chakra'
+import { formatDate } from 'src/helpers/date'
 import { memoriesPageMachine } from 'src/machines'
 
 export function MemoriesPage() {
@@ -38,15 +45,55 @@ export function MemoriesPage() {
         )}
 
         {state.matches('success') ? (
-          <ul>
+          <Grid role="list" templateColumns="repeat(4, 1fr)" gap={6}>
             {state.context.memories.map(memory => {
+              // TODO: Some sort of impossible state here on page refresh - data isn't always available
+              const kid = memory.get('kid')?.get('name')
+              const date = formatDate(memory.get('recordedDate') as unknown as Date)
+
               return (
-                <li key={memory.id}>
-                  <Link to={`/memories/${memory.id}`}>{memory.get('title')}</Link>
-                </li>
+                <Box
+                  as={Card}
+                  key={memory.id}
+                  role="listitem"
+                  width="100%"
+                  position="relative"
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent="space-between"
+                  p="unset"
+                >
+                  <Box p={4}>
+                    <VStack>
+                      <Link to={`/memories/${memory.id}`}>{memory.get('title')}</Link>
+
+                      <HStack>
+                        <Text fontSize="md" color="purple.800">
+                          {date}
+                        </Text>
+
+                        {kid ? <Tag colorScheme="teal">{kid}</Tag> : null}
+                      </HStack>
+
+                      {memory.get('summary') ? (
+                        <Text as="p" fontSize="md" color="gray.600" noOfLines={2}>
+                          {memory.get('summary')}
+                        </Text>
+                      ) : null}
+                    </VStack>
+                  </Box>
+
+                  <Box p={4}>
+                    <HStack>
+                      {memory.get('tags')?.map(tag => {
+                        return <Tag key={`${memory.id}-${tag.name}`}>{tag.name}</Tag>
+                      })}
+                    </HStack>
+                  </Box>
+                </Box>
               )
             })}
-          </ul>
+          </Grid>
         ) : null}
       </Page.Content>
     </Page>

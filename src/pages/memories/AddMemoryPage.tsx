@@ -16,9 +16,11 @@ import { formatDate } from 'src/helpers/date'
 import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { TAG_OPTIONS } from 'src/constants'
+import type { AddMemoryPageMachineContext } from 'src/machines'
 
 export function AddMemoryPage() {
   const [state, send] = useAddMemoryPage()
+  const context = state.context as AddMemoryPageMachineContext
 
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
@@ -33,7 +35,7 @@ export function AddMemoryPage() {
     const title = target.title.value
     const summary = target.summary.value
     const kidId = target.kid.value
-    const kid = state.context.kids ? getKidById(state.context?.kids, kidId) : undefined
+    const kid = context.kids ? getKidById(context?.kids, kidId) : undefined
     const recordedDate = new Date(target.recordedDate.value)
     const tags = target.tags.value ? target.tags.value.split(',') : []
     const formattedTags = tags.map(tag => {
@@ -76,13 +78,11 @@ export function AddMemoryPage() {
               <FormLabel>Kid</FormLabel>
 
               <Select name="kid">
-                {state.context.kids?.map(kid => {
+                {context.kids?.map(kid => {
                   return (
-                    <>
-                      <option key={kid.id} value={kid.id}>
-                        {kid.get('name')}
-                      </option>
-                    </>
+                    <option key={kid.id} value={kid.id}>
+                      {kid.get('name')}
+                    </option>
                   )
                 })}
               </Select>
@@ -116,7 +116,7 @@ export function AddMemoryPage() {
                 id="tags"
                 name="tags"
                 options={TAG_OPTIONS}
-                disabled={state.matches('submitting') || state.matches('success')}
+                isDisabled={state.matches('submitting') || state.matches('success')}
                 itemToString={(option: Tag) => option.name}
               />
             </FormControl>

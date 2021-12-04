@@ -8,12 +8,16 @@ import {
   FormLabel,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
   Select,
   Spinner,
   Textarea,
   VStack,
 } from 'src/components/chakra'
-import { formatDate } from 'src/helpers/date'
+import { formatInputDate } from 'src/helpers/date'
 import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
@@ -22,8 +26,9 @@ import { MemoryDetailsPageMachineContext } from 'src/machines'
 
 export function MemoryDetailsPage() {
   const [state, send] = useMemoryDetailsPageMachine()
+  const context = state.context as MemoryDetailsPageMachineContext
   // This casting shouldn't be necessary - but was intermittently encountering an error otherwise
-  const { memory } = state.context as MemoryDetailsPageMachineContext
+  const { memory } = context
   const memoryTitle = memory?.get('title')
 
   function handleSubmit(e: React.SyntheticEvent) {
@@ -38,7 +43,7 @@ export function MemoryDetailsPage() {
     const title = target.title.value
     const summary = target.summary.value
     const kidId = target.kid.value
-    const kid = state.context.kids ? getKidById(state.context?.kids, kidId) : undefined
+    const kid = context.kids ? getKidById(context?.kids, kidId) : undefined
     const recordedDate = new Date(target.recordedDate.value)
     const tags = target.tags.value ? target.tags.value.split(',') : []
     const formattedTags = tags.map(tag => {
@@ -61,6 +66,14 @@ export function MemoryDetailsPage() {
     return send({ type: 'SUBMIT', memory: updatedMemory })
   }
 
+  const hasForm =
+    (state.matches('loaded') ||
+      state.matches('submitting') ||
+      state.matches('confirmingDeletion') ||
+      state.matches('resetting')) &&
+    memory
+  const isDisabled = state.matches('submitting')
+
   return (
     <Page>
       <Page.Header>
@@ -74,7 +87,7 @@ export function MemoryDetailsPage() {
           <Button
             level="destructive"
             onClick={() => send({ type: 'DELETE', id: memory?.id })}
-            isDisabled={state.matches('loading') || state.matches('deleting')}
+            isDisabled={state.matches('loading')}
           >
             Delete Memory
           </Button>
@@ -82,7 +95,7 @@ export function MemoryDetailsPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') || state.matches('deleting') ? <Spinner /> : null}
+        {state.matches('loading') ? <Spinner /> : null}
 
         {state.matches('notFound') ? <p>Kid not found.</p> : null}
 
@@ -95,35 +108,52 @@ export function MemoryDetailsPage() {
           </p>
         ) : null}
 
-        {state.matches('confirmingDeletion') ? (
-          <div>
-            Are you sure you want to delete {memoryTitle}?
-            <div>
-              <button type="button" onClick={() => send({ type: 'CONFIRM_DELETION' })}>
-                Delete
-              </button>
+        {state.matches('confirmingDeletion') || state.matches('deleting') ? (
+          <Modal isOpen onClose={() => send('CANCEL_DELETION')}>
+            <ModalHeader>Delete Memory</ModalHeader>
 
-              <button type="button" onClick={() => send({ type: 'CANCEL_DELETION' })}>
-                Cancel
-              </button>
-            </div>
-          </div>
+            <ModalBody>
+              <p>
+                Are you sure you want to delete <strong>{memoryTitle}</strong>?
+              </p>
+            </ModalBody>
+
+            <ModalFooter>
+              <HStack>
+                <Button
+                  level="primary"
+                  onClick={() => send({ type: 'CONFIRM_DELETION' })}
+                  isLoading={state.matches('deleting')}
+                >
+                  Delete
+                </Button>
+
+                <Button
+                  level="secondary"
+                  onClick={() => send({ type: 'CANCEL_DELETION' })}
+                  isDisabled={state.matches('deleting')}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </Modal>
         ) : null}
 
-        {(state.matches('loaded') || state.matches('submitting')) && memory ? (
-          <Form onSubmit={handleSubmit}>
+        {hasForm ? (
+          <Form onSubmit={handleSubmit} shouldReset={state.matches('resetting')}>
             <VStack>
-              <FormControl id="title">
+              <FormControl id="title" isDisabled={isDisabled}>
                 <FormLabel>Title</FormLabel>
 
                 <Input name="title" type="text" defaultValue={memory.get('title')} />
               </FormControl>
 
-              <FormControl id="kid">
+              <FormControl id="kid" isDisabled={isDisabled}>
                 <FormLabel>Kid</FormLabel>
 
                 <Select name="kid" defaultValue={memory.get('kid')?.id}>
-                  {state.context.kids?.map(kid => {
+                  {context.kids?.map(kid => {
                     return (
                       <option key={kid.id} value={kid.id}>
                         {kid.get('name')}
@@ -133,26 +163,27 @@ export function MemoryDetailsPage() {
                 </Select>
               </FormControl>
 
-              <FormControl id="summary">
+              <FormControl id="summary" isDisabled={isDisabled}>
                 <FormLabel>Summary</FormLabel>
 
                 <Textarea name="summary" defaultValue={memory.get('summary')} />
               </FormControl>
 
-              <FormControl id="recorded-date">
+              <FormControl id="recorded-date" isDisabled={isDisabled}>
                 <FormLabel>Memory Date</FormLabel>
 
                 <Input
                   type="date"
                   name="recordedDate"
-                  defaultValue={formatDate(new Date(memory.get('recordedDate') as unknown as Date))}
-                  max={formatDate(new Date())}
-                  isDisabled={state.matches('loading')}
+                  defaultValue={formatInputDate(
+                    new Date(memory.get('recordedDate') as unknown as Date),
+                  )}
+                  max={formatInputDate(new Date())}
                   isRequired
                 />
               </FormControl>
 
-              <FormControl>
+              <FormControl isDisabled={isDisabled}>
                 <MultiSelect
                   label="Tags"
                   id="tags"
@@ -164,11 +195,21 @@ export function MemoryDetailsPage() {
               </FormControl>
 
               <ButtonWrapper>
-                <Button level="primary" type="submit">
+                <Button
+                  level="primary"
+                  type="submit"
+                  isDisabled={isDisabled}
+                  isLoading={state.matches('submitting')}
+                >
                   Save
                 </Button>
 
-                <Button level="secondary" variant="outline">
+                <Button
+                  level="secondary"
+                  variant="outline"
+                  isDisabled={isDisabled}
+                  onClick={() => send('CANCEL')}
+                >
                   Cancel
                 </Button>
               </ButtonWrapper>
