@@ -1,4 +1,4 @@
-import { Link as RouterLink, NavLink } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
@@ -13,7 +13,7 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { Header, HeaderNav, ProtectedRoute } from 'src/components'
+import { Header, ProtectedRoute } from 'src/components'
 import { Button, Link, List, ListItem, HStack } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
@@ -43,22 +43,22 @@ function AppContent() {
         </Link>
 
         {authorized ? (
-          <HeaderNav>
+          <Header.Nav>
             <HStack as={List}>
               <ListItem>
-                <HeaderLink to="/dashboard">Dashboard</HeaderLink>
+                <Header.Link to="/dashboard">Dashboard</Header.Link>
               </ListItem>
 
               <ListItem>
-                <HeaderLink to="/kids">Kids</HeaderLink>
+                <Header.Link to="/kids">Kids</Header.Link>
               </ListItem>
 
               <ListItem>
-                <HeaderLink to="/memories">Memories</HeaderLink>
+                <Header.Link to="/memories">Memories</Header.Link>
               </ListItem>
 
               <ListItem>
-                <HeaderLink to="/profile">Profile</HeaderLink>
+                <Header.Link to="/profile">Profile</Header.Link>
               </ListItem>
 
               <ListItem>
@@ -67,7 +67,7 @@ function AppContent() {
                 </Button>
               </ListItem>
             </HStack>
-          </HeaderNav>
+          </Header.Nav>
         ) : null}
       </Header>
 
@@ -150,13 +150,5 @@ function AppContent() {
 
       <footer></footer>
     </>
-  )
-}
-
-function HeaderLink({ children, to }: { children: React.ReactNode; to: string }) {
-  return (
-    <Link as={NavLink} to={to} textDecor="none" color="purple.500">
-      {children}
-    </Link>
   )
 }

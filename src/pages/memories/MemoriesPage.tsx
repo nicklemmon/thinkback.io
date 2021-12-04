@@ -47,49 +47,40 @@ export function MemoriesPage() {
         {state.matches('success') ? (
           <Grid role="list" templateColumns="repeat(4, 1fr)" gap={6}>
             {state.context.memories.map(memory => {
-              // TODO: Some sort of impossible state here on page refresh - data isn't always available
               const kid = memory.get('kid')?.get('name')
               const date = formatDate(memory.get('recordedDate') as unknown as Date)
 
               return (
-                <Box
-                  as={Card}
-                  key={memory.id}
-                  role="listitem"
-                  width="100%"
-                  position="relative"
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
-                  p="unset"
-                >
-                  <Box p={4}>
-                    <VStack>
+                <Box as={Card} key={memory.id} role="listitem" position="relative">
+                  <Card.Header>
+                    <Box width="100%" display="flex" justifyContent="space-between">
+                      {kid ? <Tag colorScheme="teal">{kid}</Tag> : null}
+
+                      <Text fontSize="sm" color="gray.500">
+                        {date}
+                      </Text>
+                    </Box>
+                  </Card.Header>
+
+                  <Card.Content>
+                    <VStack spacing={2}>
                       <Link to={`/memories/${memory.id}`}>{memory.get('title')}</Link>
 
-                      <HStack>
-                        <Text fontSize="md" color="purple.800">
-                          {date}
-                        </Text>
-
-                        {kid ? <Tag colorScheme="teal">{kid}</Tag> : null}
-                      </HStack>
-
                       {memory.get('summary') ? (
-                        <Text as="p" fontSize="md" color="gray.600" noOfLines={2}>
+                        <Text as="p" fontSize="md" color="gray.500" noOfLines={2}>
                           {memory.get('summary')}
                         </Text>
                       ) : null}
                     </VStack>
-                  </Box>
+                  </Card.Content>
 
-                  <Box p={4}>
+                  <Card.Footer>
                     <HStack>
                       {memory.get('tags')?.map(tag => {
                         return <Tag key={`${memory.id}-${tag.name}`}>{tag.name}</Tag>
                       })}
                     </HStack>
-                  </Box>
+                  </Card.Footer>
                 </Box>
               )
             })}
