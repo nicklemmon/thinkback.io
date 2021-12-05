@@ -9,6 +9,7 @@ import {
   Stat,
   StatLabel,
   StatNumber,
+  Tag,
   VStack,
 } from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
@@ -73,6 +74,14 @@ export function KidDetailsPage() {
 
               <StatNumber>{kidName}</StatNumber>
             </Stat>
+
+            {state.context.kid.tagColor ? (
+              <Stat>
+                <StatLabel>Tag Color</StatLabel>
+
+                <StatNumber>{state.context.kid.tagColor}</StatNumber>
+              </Stat>
+            ) : null}
 
             {state.context.kid.createdAt ? (
               <Stat>

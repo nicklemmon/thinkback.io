@@ -48,6 +48,7 @@ export type Kid = {
   objectId?: string
   createdAt?: string
   updatedAt?: string
+  tagColor?: string
 }
 
 export type Toast = {

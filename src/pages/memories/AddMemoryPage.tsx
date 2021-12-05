@@ -12,7 +12,7 @@ import {
   VStack,
 } from 'src/components/chakra'
 import { useAddMemoryPage } from 'src/hooks'
-import { formatDate } from 'src/helpers/date'
+import { formatInputDate } from 'src/helpers/date'
 import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { TAG_OPTIONS } from 'src/constants'
@@ -103,8 +103,8 @@ export function AddMemoryPage() {
               <Input
                 type="date"
                 name="recordedDate"
-                defaultValue={formatDate(new Date())}
-                max={formatDate(new Date())}
+                defaultValue={formatInputDate(new Date())}
+                max={formatInputDate(new Date())}
                 isDisabled={state.matches('submitting') || state.matches('success')}
                 isRequired
               />

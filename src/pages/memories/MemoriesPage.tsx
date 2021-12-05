@@ -47,14 +47,14 @@ export function MemoriesPage() {
         {state.matches('success') ? (
           <Grid role="list" templateColumns="repeat(4, 1fr)" gap={6}>
             {state.context.memories.map(memory => {
-              const kid = memory.get('kid')?.get('name')
+              const kid = memory.get('kid')
               const date = formatDate(memory.get('recordedDate') as unknown as Date)
 
               return (
                 <Box as={Card} key={memory.id} role="listitem" position="relative">
                   <Card.Header>
                     <Box width="100%" display="flex" justifyContent="space-between">
-                      {kid ? <Tag colorScheme="teal">{kid}</Tag> : null}
+                      {kid ? <Tag colorScheme={kid.get('tagColor')}>{kid.get('name')}</Tag> : null}
 
                       <Text fontSize="sm" color="gray.500">
                         {date}

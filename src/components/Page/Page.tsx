@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet'
 import { Box, Heading, VStack } from 'src/components/chakra'
+import { Container } from 'src/components'
 
 type PageProps = {
   children: React.ReactNode
@@ -18,16 +19,12 @@ type PageContentProps = {
 }
 
 function Page({ children }: PageProps) {
-  return (
-    <Box maxW="6xl" marginX="auto">
-      {children}
-    </Box>
-  )
+  return <Container>{children}</Container>
 }
 
 function PageHeader({ children }: PageHeaderProps) {
   return (
-    <Box paddingX="12" paddingTop="8" paddingBottom="3">
+    <Box paddingTop="8" paddingBottom="3">
       <VStack spacing={6}>{children}</VStack>
     </Box>
   )
@@ -49,7 +46,7 @@ function PageTitle({ children }: PageTitleProps) {
 
 function PageContent({ children }: PageContentProps) {
   return (
-    <Box paddingX="12" paddingTop="8" paddingBottom="8">
+    <Box paddingTop="8" paddingBottom="8">
       {children}
     </Box>
   )

@@ -1,5 +1,7 @@
 export * from './ButtonWrapper'
 export * from './Card'
+export * from './Container'
+export * from './Footer'
 export * from './Form'
 export * from './Header'
 export * from './MultiSelect'

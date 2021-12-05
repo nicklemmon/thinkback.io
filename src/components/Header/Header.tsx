@@ -1,5 +1,6 @@
-import { Box, Link, HStack } from 'src/components/chakra'
 import { NavLink } from 'react-router-dom'
+import { Box, Link, HStack } from 'src/components/chakra'
+import { Container } from 'src/components'
 
 type HeaderProps = {
   children: React.ReactNode
@@ -7,18 +8,10 @@ type HeaderProps = {
 
 function Header({ children }: HeaderProps) {
   return (
-    <Box as="header" display="flex" borderBottom="1px solid" borderColor="purple.100">
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        maxWidth="6xl"
-        width="100%"
-        marginX="auto"
-        paddingX="12"
-        paddingY="2"
-      >
+    <Box as="header" borderBottom="1px solid" borderColor="purple.100">
+      <Container display="flex" alignItems="center" justifyContent="space-between">
         {children}
-      </Box>
+      </Container>
     </Box>
   )
 }

@@ -13,8 +13,8 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { Header, ProtectedRoute } from 'src/components'
-import { Button, Link, List, ListItem, HStack } from 'src/components/chakra'
+import { Footer, Header, ProtectedRoute } from 'src/components'
+import { Box, Button, Link, List, ListItem, HStack, Text } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
@@ -31,7 +31,7 @@ function AppContent() {
   const authorized = state.matches('authorized')
 
   return (
-    <>
+    <Box minHeight="100vh">
       <Header>
         <Link
           fontWeight="700"
@@ -148,7 +148,21 @@ function AppContent() {
         </Switch>
       </main>
 
-      <footer></footer>
-    </>
+      <Footer>
+        <Text as="p" color="gray.600">
+          All rights reserved, {/* @ts-expect-error */}
+          <Link
+            as="a"
+            href="https://nicklemmon.com"
+            rel="noopener noreferrer"
+            target="_blank"
+            color="currentColor"
+          >
+            Nick Lemmon
+          </Link>{' '}
+          {new Date().getFullYear()}
+        </Text>
+      </Footer>
+    </Box>
   )
 }
