@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowBackIcon } from '@chakra-ui/icons'
-import { ButtonWrapper, Form, MultiSelect, Page } from 'src/components'
+import { ApiAlert, ButtonWrapper, Form, MultiSelect, Page } from 'src/components'
 import {
   Button,
   Link,
@@ -13,7 +13,6 @@ import {
   ModalHeader,
   ModalFooter,
   Select,
-  Spinner,
   Textarea,
   VStack,
 } from 'src/components/chakra'
@@ -95,17 +94,12 @@ export function MemoryDetailsPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') ? <Spinner /> : null}
+        {state.matches('loading') ? <Page.Loader /> : null}
 
         {state.matches('notFound') ? <p>Kid not found.</p> : null}
 
         {state.matches('error') ? (
-          <p>
-            Something went wrong. Try again.{' '}
-            <button type="button" onClick={() => send({ type: 'RETRY' })}>
-              Retry
-            </button>
-          </p>
+          <ApiAlert title="Memory failed to load" onRetry={() => send({ type: 'RETRY' })} />
         ) : null}
 
         {state.matches('confirmingDeletion') || state.matches('deleting') ? (

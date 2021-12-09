@@ -1,22 +1,27 @@
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
-import { Page } from 'src/components'
+import { ApiAlert, Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
 import {
   Button,
   HStack,
   Link,
-  Spinner,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
   Stat,
   StatLabel,
   StatNumber,
-  Tag,
   VStack,
 } from 'src/components/chakra'
 import { useKidDetailsPageMachine } from 'src/hooks'
 
 export function KidDetailsPage() {
   const [state, send] = useKidDetailsPageMachine()
-  const kidName = state.context.kid?.name
+  const { kid } = state.context
+  const hasForm =
+    kid &&
+    (state.matches('loaded') || state.matches('confirmingDeletion') || state.matches('deleting'))
 
   return (
     <Page>
@@ -30,8 +35,8 @@ export function KidDetailsPage() {
 
           <Button
             level="destructive"
-            isDisabled={state.matches('loading') || state.matches('deleting')}
-            onClick={() => send({ type: 'DELETE', id: state.context.kid?.objectId })}
+            isDisabled={state.matches('loading')}
+            onClick={() => send({ type: 'DELETE', id: kid?.id })}
           >
             Delete Kid
           </Button>
@@ -39,55 +44,69 @@ export function KidDetailsPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') || state.matches('deleting') ? <Spinner /> : null}
+        {state.matches('loading') ? <Page.Loader /> : null}
 
         {state.matches('notFound') ? <p>Kid not found.</p> : null}
 
         {state.matches('error') ? (
-          <p>
-            Something went wrong. Try again.{' '}
-            <button type="button" onClick={() => send({ type: 'RETRY' })}>
-              Retry
-            </button>
-          </p>
+          <ApiAlert title="Kid failed to load" onRetry={() => send({ type: 'RETRY' })} />
         ) : null}
 
-        {state.matches('confirmingDeletion') ? (
-          <div>
-            Are you sure you want to delete {kidName}?
-            <div>
-              <button type="button" onClick={() => send({ type: 'CONFIRM_DELETION' })}>
-                Delete
-              </button>
+        {(state.matches('confirmingDeletion') || state.matches('deleting')) && kid ? (
+          <Modal isOpen onClose={() => send('CANCEL_DELETION')}>
+            <ModalHeader>Delete Kid</ModalHeader>
 
-              <button type="button" onClick={() => send({ type: 'CANCEL_DELETION' })}>
-                Cancel
-              </button>
-            </div>
-          </div>
+            <ModalBody>
+              <p>
+                Are you sure you want to delete <strong>{kid.get('name')}</strong>?
+              </p>
+            </ModalBody>
+
+            <ModalFooter>
+              <HStack>
+                <Button
+                  level="primary"
+                  onClick={() => send({ type: 'CONFIRM_DELETION' })}
+                  isLoading={state.matches('deleting')}
+                >
+                  Delete
+                </Button>
+
+                <Button
+                  level="secondary"
+                  onClick={() => send({ type: 'CANCEL_DELETION' })}
+                  isDisabled={state.matches('deleting')}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </Modal>
         ) : null}
 
-        {state.matches('loaded') && state.context.kid ? (
+        {hasForm ? (
           <VStack>
             <Stat>
               <StatLabel>Name</StatLabel>
 
-              <StatNumber>{kidName}</StatNumber>
+              <StatNumber>{kid.get('name')}</StatNumber>
             </Stat>
 
-            {state.context.kid.tagColor ? (
+            {kid.get('tagColor') ? (
               <Stat>
                 <StatLabel>Tag Color</StatLabel>
 
-                <StatNumber>{state.context.kid.tagColor}</StatNumber>
+                <StatNumber>{kid.get('tagColor')}</StatNumber>
               </Stat>
             ) : null}
 
-            {state.context.kid.createdAt ? (
+            {kid.get('createdAt') ? (
               <Stat>
                 <StatLabel>Created Date</StatLabel>
 
-                <StatNumber>{formatDate(new Date(state.context.kid.createdAt))}</StatNumber>
+                <StatNumber>
+                  {formatDate(new Date(kid.get('createdAt') as unknown as Date))}
+                </StatNumber>
               </Stat>
             ) : null}
 
@@ -95,9 +114,9 @@ export function KidDetailsPage() {
               as={Link}
               level="secondary"
               rightIcon={<ArrowForwardIcon />}
-              to={`/memories?kid=${state.context.kid.objectId}`}
+              to={`/memories?kid=${kid.id}`}
             >
-              See memories for {kidName}
+              See memories for {kid.get('name')}
             </Button>
           </VStack>
         ) : null}

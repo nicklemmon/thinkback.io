@@ -1,20 +1,7 @@
 import { HStack } from '@chakra-ui/layout'
 import { useMachine } from '@xstate/react'
-import { Card, Page } from 'src/components'
-import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
-  Button,
-  Link,
-  Grid,
-  Spinner,
-  Tag,
-  Text,
-  VStack,
-} from 'src/components/chakra'
+import { ApiAlert, Card, Page } from 'src/components'
+import { Box, Button, Link, Grid, Tag, Text, VStack } from 'src/components/chakra'
 import { formatDate } from 'src/helpers/date'
 import { memoriesPageMachine } from 'src/machines'
 
@@ -32,17 +19,11 @@ export function MemoriesPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') && <Spinner />}
+        {state.matches('loading') ? <Page.Loader /> : null}
 
-        {state.matches('error') && (
-          <Alert status="error">
-            <AlertIcon />
-            <AlertTitle>Memories failed to load</AlertTitle>
-            <AlertDescription>
-              Please <button onClick={() => send('RETRY')}>try again</button>.
-            </AlertDescription>
-          </Alert>
-        )}
+        {state.matches('error') ? (
+          <ApiAlert title="Memories failed to load" onRetry={() => send('RETRY')} />
+        ) : null}
 
         {state.matches('success') ? (
           <Grid role="list" templateColumns="repeat(4, 1fr)" gap={6}>

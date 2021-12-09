@@ -3,8 +3,15 @@ import { Kid } from 'src/types'
 import { deleteKid, getKid } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
+// TODO:
+/**
+ * - [] show toast on delete success
+ * - [] use Parse object instead of parsed data
+ * - [] migrate JSX to use the Parse object
+ */
+
 type KidDetailsPageMachineContext = {
-  kid: Kid | undefined
+  kid: Parse.Object<Kid> | undefined
   error: Object | undefined
 }
 
@@ -24,10 +31,7 @@ const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history:
       id: 'kidDetailsPage',
       initial: 'validatingParams',
       context: {
-        kid: {
-          objectId: queryStringParams.id,
-          name: '',
-        },
+        kid: undefined,
         error: undefined,
       },
       states: {
@@ -35,7 +39,7 @@ const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history:
           always: [
             {
               target: 'loading',
-              cond: (ctx: KidDetailsPageMachineContext) => Boolean(ctx.kid?.objectId),
+              cond: () => Boolean(queryStringParams.id),
             },
             {
               target: 'notFound',
@@ -45,7 +49,8 @@ const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history:
         loading: {
           invoke: {
             src: (ctx: KidDetailsPageMachineContext) => {
-              return getKid(ctx.kid?.objectId ? ctx.kid.objectId : '')
+              // We know the right search string is defined at this point
+              return getKid(queryStringParams.id as string)
             },
             onDone: {
               target: 'loaded',
@@ -77,8 +82,9 @@ const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history:
         },
         deleting: {
           invoke: {
-            src: (ctx: KidDetailsPageMachineContext) =>
-              deleteKid(ctx.kid?.objectId ? ctx.kid.objectId : ''),
+            src: (ctx: KidDetailsPageMachineContext) => {
+              return deleteKid(queryStringParams.id as string)
+            },
             onDone: {
               target: 'deleted',
             },

@@ -1,36 +1,18 @@
-import { createMachine, assign, MachineConfig } from 'xstate'
+import { createMachine, MachineConfig } from 'xstate'
 import { Kid, Toast } from 'src/types'
 import { createKid } from 'src/helpers/api'
 
-type AddKidPageMachineContext = {
-  kid: Kid
-}
+type AddKidPageMachineContext = {}
 
 type AddKidPageMachineSchema = {
   states: {
     editing: {}
-    loading: {}
-    error: {}
+    submitting: {}
+    success: {}
   }
 }
 
-type AddKidPageMachineEvents = { type: 'NAME_CHANGE'; name: string } | { type: 'SUBMIT' }
-
-const sharedEventTransitions = {
-  NAME_CHANGE: {
-    actions: 'setNameToCtx',
-    target: 'editing',
-  },
-  SUBMIT: [
-    {
-      target: 'loading',
-      cond: 'nameExists',
-    },
-    {
-      target: 'error',
-    },
-  ],
-}
+type AddKidPageMachineEvents = { type: 'SUBMIT'; kid: Kid }
 
 function addKidPageMachine(showToast: (toast: Toast) => void) {
   const addKidPageMachineConfig: MachineConfig<
@@ -40,21 +22,21 @@ function addKidPageMachine(showToast: (toast: Toast) => void) {
   > = {
     id: 'addKidPageMachine',
     initial: 'editing',
-    context: {
-      kid: {
-        name: '',
-      },
-    },
+    context: {},
     states: {
       editing: {
-        on: sharedEventTransitions,
+        on: {
+          SUBMIT: 'submitting',
+        },
       },
-      loading: {
+      submitting: {
         invoke: {
-          src: (ctx: AddKidPageMachineContext) => createKid(ctx.kid),
+          src: (_ctx: AddKidPageMachineContext, event: any) => {
+            return createKid(event.kid)
+          },
           onDone: {
-            actions: ['handleSuccess', 'resetForm'],
-            target: 'editing',
+            actions: 'handleSuccess',
+            target: 'success',
           },
           onError: {
             actions: 'handleError',
@@ -62,39 +44,21 @@ function addKidPageMachine(showToast: (toast: Toast) => void) {
           },
         },
       },
-      error: {
-        on: sharedEventTransitions,
+      success: {
+        after: {
+          250: 'editing', // Near immediate transition - this is used to trigger a form reset
+        },
       },
     },
   }
 
   const addKidPageMachineOptions = {
     actions: {
-      setNameToCtx: assign((ctx: AddKidPageMachineContext, event: any) => {
-        return {
-          kid: {
-            ...ctx.kid,
-            name: event.name,
-          },
-        }
-      }),
-      resetForm: assign((ctx: AddKidPageMachineContext, event: any) => {
-        return {
-          kid: {
-            name: '',
-          },
-        }
-      }),
       handleError: () => {
         return showToast({ message: 'Kid was not created. Try again', variant: 'error' })
       },
       handleSuccess: () => {
         return showToast({ message: 'Kid added', variant: 'success' })
-      },
-    },
-    guards: {
-      nameExists: (ctx: AddKidPageMachineContext) => {
-        return Boolean(ctx.kid.name)
       },
     },
   }

@@ -71,7 +71,6 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
         invoke: {
           // TODO: Boo any :(
           src: (_ctx: AddMemoryPageMachineContext, event: any) => {
-            console.log('event.memory', event.memory)
             return createMemory(event.memory)
           },
           onDone: {
@@ -90,7 +89,6 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
   const machineOptions = {
     actions: {
       setDataToCtx: assign((_ctx, event: any) => {
-        console.log('event.data', event.data)
         return { kids: event.data }
       }),
       setErrorToCtx: assign((_ctx, event: any) => {

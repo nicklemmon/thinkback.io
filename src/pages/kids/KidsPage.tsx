@@ -1,6 +1,18 @@
 import { useMachine } from '@xstate/react'
-import { Page } from 'src/components'
-import { Button, Link, Spinner } from 'src/components/chakra'
+import { ApiAlert, Page } from 'src/components'
+import {
+  Button,
+  Link,
+  Table,
+  TableCaption,
+  Thead,
+  Tbody,
+  Th,
+  Tr,
+  Td,
+  Tag,
+  VisuallyHidden,
+} from 'src/components/chakra'
 import { kidsPageMachine } from 'src/machines/kidsPageMachine'
 
 export function KidsPage() {
@@ -16,26 +28,43 @@ export function KidsPage() {
         </Button>
       </Page.Header>
 
-      <Page.Content>
-        {state.matches('loading') && <Spinner />}
+      {state.matches('loading') ? <Page.Loader /> : null}
 
-        {state.matches('error') && (
-          <p>
-            Something went wrong. Try again.{' '}
-            <button onClick={() => send({ type: 'RETRY' })}>Retry</button>
-          </p>
-        )}
+      <Page.Content>
+        {state.matches('error') ? (
+          <ApiAlert title="Kids failed to load" onRetry={() => send({ type: 'RETRY' })} />
+        ) : null}
 
         {state.matches('success') ? (
-          <ul>
-            {state.context.kids.map(kid => {
-              return (
-                <li key={kid.id}>
-                  <Link to={`/kids/${kid.id}`}>{kid.get('name')}</Link>
-                </li>
-              )
-            })}
-          </ul>
+          <Table>
+            <VisuallyHidden>
+              <TableCaption>Kids</TableCaption>
+            </VisuallyHidden>
+
+            <Thead>
+              <Tr>
+                <Th>Name</Th>
+
+                <Th>Tag Color</Th>
+              </Tr>
+            </Thead>
+
+            <Tbody>
+              {state.context.kids.map(kid => {
+                return (
+                  <Tr key={kid.id}>
+                    <Td>
+                      <Link to={`/kids/${kid.id}`}>{kid.get('name')}</Link>
+                    </Td>
+
+                    <Td>
+                      <Tag colorScheme={kid.get('tagColor')}>{kid.get('tagColor')}</Tag>
+                    </Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
         ) : null}
       </Page.Content>
     </Page>

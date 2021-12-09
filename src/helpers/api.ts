@@ -135,7 +135,7 @@ export async function getKid(id: string) {
 
   return query
     .first({ sessionToken })
-    .then(res => parseResponse(res))
+    .then(res => res)
     .catch(err => Promise.reject(err))
 }
 
@@ -154,13 +154,14 @@ export async function getKids() {
 }
 
 export async function createKid(kid: Kid) {
-  const { name } = kid
+  const { name, tagColor } = kid
   const Kid = Parse.Object.extend('Kid')
   const object = new Kid()
   const currentUser = getCurrentUser()
   const sessionToken = getSessionToken(currentUser)
 
   object.set('name', name)
+  object.set('tagColor', tagColor)
   object.setACL(currentUser)
 
   return object

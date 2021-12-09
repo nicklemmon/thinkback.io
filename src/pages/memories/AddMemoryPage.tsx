@@ -23,8 +23,6 @@ export function AddMemoryPage() {
   const context = state.context as AddMemoryPageMachineContext
 
   function handleSubmit(e: React.SyntheticEvent) {
-    e.preventDefault()
-
     const target = e.target as typeof e.target & {
       title: { value: string }
       summary: { value: string }
