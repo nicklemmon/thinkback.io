@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@chakra-ui/icons": "1.0.17",
-    "@chakra-ui/react": "1.6.12",
+    "@chakra-ui/icons": "1.1.1",
+    "@chakra-ui/react": "1.7.3",
     "@emotion/react": "11.5.0",
     "@emotion/styled": "11.3.0",
     "@testing-library/jest-dom": "5.15.0",
