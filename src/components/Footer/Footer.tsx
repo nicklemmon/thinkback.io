@@ -13,7 +13,7 @@ export function Footer({ children, ...props }: FooterProps) {
       position="sticky"
       top="100%"
       as="footer"
-      backgroundColor="gray.200"
+      backgroundColor="gray.100"
       color="gray.600"
       {...props}
     >
