@@ -4,7 +4,6 @@ import {
   Button,
   Link,
   Table,
-  TableCaption,
   Thead,
   Tbody,
   Th,
@@ -37,9 +36,9 @@ export function KidsPage() {
 
         {state.matches('success') ? (
           <Table>
-            <VisuallyHidden>
-              <TableCaption>Kids</TableCaption>
-            </VisuallyHidden>
+            <caption>
+              <VisuallyHidden>Kids</VisuallyHidden>
+            </caption>
 
             <Thead>
               <Tr>
