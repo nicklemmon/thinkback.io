@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
   AddMemoryPage,
-  DashboardPage,
   KidDetailsPage,
   KidsPage,
   LoginPage,
@@ -36,8 +35,9 @@ function AppContent() {
         <Link
           fontWeight="700"
           textDecor="none"
+          color="gray.100"
           as={RouterLink}
-          to={authorized ? '/dashboard' : '/auth'}
+          to={authorized ? '/memories' : '/auth'}
         >
           Memories App
         </Link>
@@ -46,7 +46,7 @@ function AppContent() {
           <Header.Nav>
             <HStack as={List}>
               <ListItem>
-                <Header.Link to="/dashboard">Dashboard</Header.Link>
+                <Header.Link to="/memories">Memories</Header.Link>
               </ListItem>
 
               <ListItem>
@@ -54,15 +54,17 @@ function AppContent() {
               </ListItem>
 
               <ListItem>
-                <Header.Link to="/memories">Memories</Header.Link>
-              </ListItem>
-
-              <ListItem>
                 <Header.Link to="/profile">Profile</Header.Link>
               </ListItem>
 
               <ListItem>
-                <Button level="secondary" size="sm" onClick={() => send({ type: 'LOG_OUT' })}>
+                <Button
+                  level="secondary"
+                  size="sm"
+                  colorScheme="whiteAlpha"
+                  color="white"
+                  onClick={() => send({ type: 'LOG_OUT' })}
+                >
                   Log Out
                 </Button>
               </ListItem>
@@ -74,7 +76,7 @@ function AppContent() {
       <main>
         <Switch>
           <Route path="/" exact>
-            <Redirect to="/dashboard" />
+            <Redirect to="/memories" />
           </Route>
 
           <ProtectedRoute condition={!authorized} path="/auth" exact>
@@ -104,10 +106,6 @@ function AppContent() {
                 })
               }}
             />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/dashboard">
-            <DashboardPage />
           </ProtectedRoute>
 
           <ProtectedRoute condition={authorized} path="/kids" exact>
@@ -149,7 +147,7 @@ function AppContent() {
       </main>
 
       <Footer>
-        <Text as="p" color="gray.600">
+        <Text as="p">
           All rights reserved, {/* @ts-expect-error */}
           <Link
             as="a"

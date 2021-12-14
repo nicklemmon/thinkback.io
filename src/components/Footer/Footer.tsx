@@ -14,7 +14,7 @@ export function Footer({ children, ...props }: FooterProps) {
       top="100%"
       as="footer"
       backgroundColor="gray.100"
-      color="gray.700"
+      color="gray.600"
       {...props}
     >
       <Container>{children}</Container>

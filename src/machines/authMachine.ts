@@ -110,7 +110,7 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           return history.push('/auth')
         },
         navigateToDashboard: _ctx => {
-          return history.push('/dashboard')
+          return history.push('/memories')
         },
         navigateToSignUp: _ctx => {
           return history.push('/sign-up')

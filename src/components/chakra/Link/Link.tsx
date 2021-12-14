@@ -3,7 +3,7 @@ import { LinkProps as ReactRouterLinkProps } from 'react-router-dom'
 import { Link as ChakraLink } from '@chakra-ui/react'
 import { LinkProps as ChakraLinkProps } from '@chakra-ui/layout'
 
-type LinkProps = ReactRouterLinkProps & ChakraLinkProps
+export type LinkProps = ReactRouterLinkProps & ChakraLinkProps
 
 export function Link(props: LinkProps) {
   return (

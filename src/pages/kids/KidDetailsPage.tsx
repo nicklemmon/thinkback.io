@@ -1,4 +1,4 @@
-import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 import { ApiAlert, Page } from 'src/components'
 import { formatDate } from 'src/helpers/date'
 import {
@@ -110,14 +110,15 @@ export function KidDetailsPage() {
               </Stat>
             ) : null}
 
-            <Button
+            {/* TODO: Implement this later! */}
+            {/* <Button
               as={Link}
               level="secondary"
               rightIcon={<ArrowForwardIcon />}
               to={`/memories?kid=${kid.id}`}
             >
               See memories for {kid.get('name')}
-            </Button>
+            </Button> */}
           </VStack>
         ) : null}
       </Page.Content>
