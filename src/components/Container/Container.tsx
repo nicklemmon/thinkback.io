@@ -7,5 +7,14 @@ type ContainerProps = BoxProps & {
 }
 
 export function Container(props: ContainerProps) {
-  return <Box maxWidth="6xl" width="100%" marginX="auto" paddingX="12" paddingY="2" {...props} />
+  return (
+    <Box
+      maxWidth="6xl"
+      width="100%"
+      marginX="auto"
+      paddingX={['6', '6', '12']}
+      paddingY="2"
+      {...props}
+    />
+  )
 }
