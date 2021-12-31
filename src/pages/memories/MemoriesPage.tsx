@@ -1,11 +1,26 @@
-import { useMachine } from '@xstate/react'
+import { useParams } from 'react-router-dom'
 import { ApiAlert, Page } from 'src/components'
 import { Button, Link, Tabs, TabList, TabPanels, Tab, TabPanel } from 'src/components/chakra'
-import { memoriesPageMachine } from 'src/machines'
+import { useMemoriesPage } from 'src/hooks'
 import { MemoriesGrid, MemoriesTable } from './components'
 
+const VIEW_INDICES = ['grid', 'table']
+
+type MemoriesPageRouteParams = {
+  view?: string
+}
+
 export function MemoriesPage() {
-  const [state, send] = useMachine(memoriesPageMachine)
+  const { view } = useParams<MemoriesPageRouteParams>()
+  const [state, send] = useMemoriesPage()
+  const activeTab = view === 'grid' ? 0 : 1
+
+  const handleTabsChange = (index: number) => {
+    const view = VIEW_INDICES[index]
+
+    /* @ts-expect-error */
+    return send({ type: 'CHANGE_VIEW', view })
+  }
 
   return (
     <Page>
@@ -25,7 +40,12 @@ export function MemoriesPage() {
         ) : null}
 
         {state.matches('success') ? (
-          <Tabs variant="enclosed" colorScheme="purple">
+          <Tabs
+            variant="enclosed"
+            colorScheme="purple"
+            index={activeTab}
+            onChange={handleTabsChange}
+          >
             <TabList>
               <Tab>Grid View</Tab>
 

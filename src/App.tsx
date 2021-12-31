@@ -79,6 +79,10 @@ function AppContent() {
             <Redirect to="/memories" />
           </Route>
 
+          <Route path="/memories" exact>
+            <Redirect to="/memories/view/grid" />
+          </Route>
+
           <ProtectedRoute condition={!authorized} path="/auth" exact>
             <LoginPage
               handleLogin={(submitEvent: { username: string; password: string }) =>
@@ -120,7 +124,7 @@ function AppContent() {
             <KidDetailsPage />
           </ProtectedRoute>
 
-          <ProtectedRoute condition={authorized} path="/memories" exact>
+          <ProtectedRoute condition={authorized} path="/memories/view/:view">
             <MemoriesPage />
           </ProtectedRoute>
 
