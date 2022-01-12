@@ -17,7 +17,7 @@
     "@xstate/react": "1.6.3",
     "date-fns": "2.27.0",
     "downshift": "6.1.7",
-    "framer-motion": "4.1.17",
+    "framer-motion": "5.6.0",
     "history": "5.1.0",
     "parse": "3.4.0",
     "prettier": "2.5.1",
