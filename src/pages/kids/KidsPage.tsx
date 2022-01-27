@@ -1,4 +1,5 @@
 import { useMachine } from '@xstate/react'
+import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { ApiAlert, Page } from 'src/components'
 import {
   Button,
@@ -45,6 +46,10 @@ export function KidsPage() {
                 <Th>Name</Th>
 
                 <Th>Tag Color</Th>
+
+                <Th>
+                  <VisuallyHidden>Actions</VisuallyHidden>
+                </Th>
               </Tr>
             </Thead>
 
@@ -58,6 +63,17 @@ export function KidsPage() {
 
                     <Td>
                       <Tag colorScheme={kid.get('tagColor')}>{kid.get('tagColor')}</Tag>
+                    </Td>
+
+                    <Td textAlign="end">
+                      <Button
+                        as={Link}
+                        level="tertiary"
+                        rightIcon={<ArrowForwardIcon />}
+                        to={`/memories/view/grid?kidId=${kid.id}`}
+                      >
+                        View Memories
+                      </Button>
                     </Td>
                   </Tr>
                 )

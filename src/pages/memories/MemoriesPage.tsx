@@ -136,7 +136,7 @@ export function MemoriesPage() {
 
                   <HStack>
                     <Button level="secondary" type="submit">
-                      Search
+                      Apply Filters
                     </Button>
 
                     <Button level="tertiary" onClick={() => send('CLEAR_FILTERS')}>
