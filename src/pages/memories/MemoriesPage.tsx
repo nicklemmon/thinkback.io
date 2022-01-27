@@ -114,7 +114,7 @@ export function MemoriesPage() {
                   <FormControl id="memory-kid-id">
                     <FormLabel htmlFor="memory-kid-id">Kid</FormLabel>
 
-                    <Select name="kidId" defaultValue={searchedKidId ? searchedKidId : ''}>
+                    <Select name="kidId" defaultValue={searchedKidId ? searchedKidId : 'all'}>
                       <option value="all">All Kids</option>
 
                       {state.context.kids?.map(kid => {
@@ -139,9 +139,11 @@ export function MemoriesPage() {
                       Apply Filters
                     </Button>
 
-                    <Button level="tertiary" onClick={() => send('CLEAR_FILTERS')}>
-                      Clear Filters
-                    </Button>
+                    {searchedFilterBy || searchedKidId ? (
+                      <Button level="tertiary" onClick={() => send('CLEAR_FILTERS')}>
+                        Clear Filters
+                      </Button>
+                    ) : null}
                   </HStack>
                 </GridItem>
               </Grid>
@@ -159,8 +161,6 @@ export function MemoriesPage() {
 
                 <Tab>Table View</Tab>
               </TabList>
-
-              {/* TODO: Handle empty states due to filtering */}
 
               <TabPanels>
                 <TabPanel padding="0" paddingTop="6">
