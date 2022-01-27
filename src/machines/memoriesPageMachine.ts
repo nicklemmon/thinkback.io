@@ -1,17 +1,22 @@
 import { createMachine, assign } from 'xstate'
-import { Memory } from 'src/types'
+import { Kid, Memory } from 'src/types'
 import { getMemories, getKids } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
 type MemoriesPageMachineContext = {
   view?: string
+  kids: Parse.Object<Kid>[] | []
   memories: Parse.Object<Memory>[] | []
   error: Object | undefined
 }
 
 type View = 'grid' | 'table'
 
-type MemoriesPageEvents = { type: 'RETRY' } | { type: 'CHANGE_VIEW'; view: View }
+type MemoriesPageEvents =
+  | { type: 'RETRY' }
+  | { type: 'CHANGE_VIEW'; view: View }
+  | { type: 'FILTER_SUBMIT'; filterBy: string | undefined; kidId: string | undefined }
+  | { type: 'CLEAR_FILTERS' }
 
 const memoriesPageMachine = (history: BrowserHistory) => {
   return createMachine<MemoriesPageMachineContext, MemoriesPageEvents>(
@@ -20,6 +25,7 @@ const memoriesPageMachine = (history: BrowserHistory) => {
       initial: 'loading',
       context: {
         memories: [],
+        kids: [],
         error: undefined,
       },
       states: {
@@ -51,6 +57,14 @@ const memoriesPageMachine = (history: BrowserHistory) => {
               actions: 'updateView',
               target: 'success',
             },
+            FILTER_SUBMIT: {
+              actions: 'updateFilters',
+              target: 'success',
+            },
+            CLEAR_FILTERS: {
+              actions: 'clearFilters',
+              target: 'success',
+            },
           },
         },
       },
@@ -58,20 +72,32 @@ const memoriesPageMachine = (history: BrowserHistory) => {
     {
       actions: {
         setMemoriesToCtx: assign((_ctx, event: any) => {
-          const [memories] = event.data
-          const sortedMemories = [...memories].sort(
-            (a: Parse.Object<Memory>, b: Parse.Object<Memory>) => {
-              /* @ts-expect-error */
-              return new Date(b.get('recordedDate')) - new Date(a.get('recordedDate'))
-            },
-          )
-          return { memories: sortedMemories }
+          const [memories, kids] = event.data
+
+          return { memories, kids }
         }),
         setErrorToCtx: assign((_ctx, event) => {
           return { error: event }
         }),
         updateView: (_ctx, event: any) => {
-          return history.push(`/memories/view/${event.view}`)
+          return history.push({
+            pathname: `/memories/view/${event.view}`,
+            search: history.location.search,
+          })
+        },
+        updateFilters: (_ctx, event: any) => {
+          const { filterBy, kidId } = event
+
+          return history.replace({
+            pathname: history.location.pathname,
+            search: `?filterBy=${filterBy}&kidId=${kidId}`,
+          })
+        },
+        clearFilters: _ctx => {
+          return history.replace({
+            pathname: history.location.pathname,
+            search: '',
+          })
         },
       },
     },
