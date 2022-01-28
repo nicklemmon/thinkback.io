@@ -16,7 +16,6 @@ export function AddKidPage() {
     }
     const name = target.name.value
     const tagColor = target.tagColor.value
-    console.log(tagColor)
 
     return send({ type: 'SUBMIT', kid: { name, tagColor } })
   }

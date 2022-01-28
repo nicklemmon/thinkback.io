@@ -39,7 +39,7 @@ function AppContent() {
           as={RouterLink}
           to={authorized ? '/memories' : '/auth'}
         >
-          Memories App
+          ThinkBack
         </Link>
 
         {authorized ? (
