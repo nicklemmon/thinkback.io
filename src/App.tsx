@@ -12,17 +12,24 @@ import {
   SignUpPage,
   ThrowErrorPage,
 } from 'src/pages'
+<<<<<<< HEAD
 import { isProd } from 'src/constants'
 import { DefaultLayout } from './layouts'
 import { ProtectedRoute } from 'src/components'
+=======
+import { Footer, Header, ErrorBoundary, ProtectedRoute } from 'src/components'
+import { Box, Button, Link, List, ListItem, HStack, Text } from 'src/components/chakra'
+>>>>>>> 861e98d... Adds ErrorBoundary
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
 export function App() {
   return (
-    <Providers>
-      <AppContent />
-    </Providers>
+    <ErrorBoundary>
+      <Providers>
+        <AppContent />
+      </Providers>
+    </ErrorBoundary>
   )
 }
 
