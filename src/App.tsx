@@ -12,19 +12,9 @@ import {
   SignUpPage,
   ThrowErrorPage,
 } from 'src/pages'
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { isProd } from 'src/constants'
-import { DefaultLayout } from './layouts'
 import { ProtectedRoute } from 'src/components'
-=======
-import { Footer, Header, ErrorBoundary, ProtectedRoute } from 'src/components'
-=======
-import { isProd } from 'src/constants'
-import { Footer, Header, ProtectedRoute } from 'src/components'
->>>>>>> 58a1c73... Adds error boundary and /throw-error route
-import { Box, Button, Link, List, ListItem, HStack, Text } from 'src/components/chakra'
->>>>>>> 861e98d... Adds ErrorBoundary
+import { DefaultLayout } from './layouts'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
@@ -110,78 +100,9 @@ function AppContent() {
           </Route>
         ) : null}
 
-<<<<<<< HEAD
         <Route path="/404">
           <NotFoundPage />
         </Route>
-=======
-          <ProtectedRoute condition={!authorized} path="/auth" exact>
-            <LoginPage
-              handleLogin={(submitEvent: { username: string; password: string }) =>
-                send({
-                  type: 'LOGIN',
-                  username: submitEvent.username,
-                  password: submitEvent.password,
-                })
-              }
-            />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={!authorized} path="/sign-up">
-            <SignUpPage
-              handleSignUp={(submitEvent: {
-                username: string
-                email: string
-                password: string
-              }) => {
-                send({
-                  type: 'SIGN_UP',
-                  username: submitEvent.username,
-                  email: submitEvent.email,
-                  password: submitEvent.password,
-                })
-              }}
-            />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/kids" exact>
-            <KidsPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/kids/add">
-            <AddKidPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/kids/:id">
-            <KidDetailsPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/memories/view/:view">
-            <MemoriesPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/memories/add">
-            <AddMemoryPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/memories/:id">
-            <MemoryDetailsPage />
-          </ProtectedRoute>
-
-          <ProtectedRoute condition={authorized} path="/profile">
-            <ProfilePage />
-          </ProtectedRoute>
-
-          {!isProd ? (
-            <Route path="/throw-error">
-              <ThrowErrorPage />
-            </Route>
-          ) : null}
-
-          <Route path="/404">
-            <NotFoundPage />
-          </Route>
->>>>>>> 58a1c73... Adds error boundary and /throw-error route
 
         <Route>
           <NotFoundPage />
