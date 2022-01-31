@@ -97,7 +97,7 @@ export function MemoriesPage() {
         {state.matches('success') ? (
           <VStack>
             <Form onSubmit={handleSubmit}>
-              <Grid templateColumns="1fr 1fr 1fr" gap={6}>
+              <Grid templateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }} gap={{ base: 2, md: 6 }}>
                 <GridItem>
                   <FormControl id="memory-filter-by">
                     <FormLabel htmlFor="memory-filter-by">Filter by</FormLabel>

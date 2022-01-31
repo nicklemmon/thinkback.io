@@ -16,7 +16,7 @@ import {
   Textarea,
   VStack,
 } from 'src/components/chakra'
-import { formatInputDate } from 'src/helpers/date'
+import { toDateInput } from 'src/helpers/date'
 import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
 import { useMemoryDetailsPageMachine } from 'src/hooks'
@@ -169,10 +169,10 @@ export function MemoryDetailsPage() {
                 <Input
                   type="date"
                   name="recordedDate"
-                  defaultValue={formatInputDate(
+                  defaultValue={toDateInput(
                     new Date(memory.get('recordedDate') as unknown as Date),
                   )}
-                  max={formatInputDate(new Date())}
+                  max={toDateInput(new Date())}
                   isRequired
                 />
               </FormControl>

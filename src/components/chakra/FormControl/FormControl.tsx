@@ -4,5 +4,5 @@ import { FormControlProps as ChakraFormControlProps } from '@chakra-ui/form-cont
 type FormControlProps = ChakraFormControlProps
 
 export function FormControl(props: FormControlProps) {
-  return <ChakraFormControl {...props} />
+  return <ChakraFormControl width="100%" {...props} />
 }
