@@ -11,19 +11,19 @@ import {
   NotFoundPage,
   ProfilePage,
   SignUpPage,
+  ThrowErrorPage,
 } from 'src/pages'
-import { Footer, Header, ErrorBoundary, ProtectedRoute } from 'src/components'
+import { isProd } from 'src/constants'
+import { Footer, Header, ProtectedRoute } from 'src/components'
 import { Box, Button, Link, List, ListItem, HStack, Text } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
 export function App() {
   return (
-    <ErrorBoundary>
-      <Providers>
-        <AppContent />
-      </Providers>
-    </ErrorBoundary>
+    <Providers>
+      <AppContent />
+    </Providers>
   )
 }
 
@@ -141,6 +141,12 @@ function AppContent() {
           <ProtectedRoute condition={authorized} path="/profile">
             <ProfilePage />
           </ProtectedRoute>
+
+          {!isProd ? (
+            <Route path="/throw-error">
+              <ThrowErrorPage />
+            </Route>
+          ) : null}
 
           <Route path="/404">
             <NotFoundPage />

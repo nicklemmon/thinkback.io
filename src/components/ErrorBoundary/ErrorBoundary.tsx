@@ -1,4 +1,6 @@
 import React, { ErrorInfo } from 'react'
+import { Page } from 'src/components'
+import { Button, Link, VStack } from 'src/components/chakra'
 
 type ErrorBoundaryProps = {
   children: React.ReactNode
@@ -26,7 +28,26 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>
+      return (
+        <Page>
+          <Page.Header>
+            <Page.Title>Something went wrong</Page.Title>
+          </Page.Header>
+
+          <Page.Content>
+            <VStack>
+              <p>
+                Unfortunately, accidents happen. Something went wrong and will be reported to be
+                fixed shortly.
+              </p>
+
+              <Button level="primary" as="a" href="/">
+                Save me!
+              </Button>
+            </VStack>
+          </Page.Content>
+        </Page>
+      )
     }
 
     return this.props.children
