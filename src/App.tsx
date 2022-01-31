@@ -12,16 +12,18 @@ import {
   ProfilePage,
   SignUpPage,
 } from 'src/pages'
-import { Footer, Header, ProtectedRoute } from 'src/components'
+import { Footer, Header, ErrorBoundary, ProtectedRoute } from 'src/components'
 import { Box, Button, Link, List, ListItem, HStack, Text } from 'src/components/chakra'
 import { useAuthMachine } from './hooks'
 import { Providers } from './Providers'
 
 export function App() {
   return (
-    <Providers>
-      <AppContent />
-    </Providers>
+    <ErrorBoundary>
+      <Providers>
+        <AppContent />
+      </Providers>
+    </ErrorBoundary>
   )
 }
 
