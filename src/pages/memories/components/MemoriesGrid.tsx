@@ -10,7 +10,7 @@ export function MemoriesGrid({ memories }: { memories: Parse.Object<Memory>[] | 
       templateColumns={['1fr', 'repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']}
       gap={6}
     >
-      {memories.map((memory: Parse.Object<Memory>) => {
+      {memories.map((memory: Parse.Object<Memory>, index) => {
         const kid = memory.get('kid')
         const date = formatDate(memory.get('recordedDate') as unknown as Date)
 
