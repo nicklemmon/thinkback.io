@@ -1,4 +1,3 @@
-import { Link as RouterLink } from 'react-router-dom'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import {
   AddKidPage,
@@ -38,7 +37,6 @@ function AppContent() {
           fontWeight="700"
           textDecor="none"
           color="gray.100"
-          as={RouterLink}
           to={authorized ? '/memories' : '/auth'}
         >
           ThinkBack

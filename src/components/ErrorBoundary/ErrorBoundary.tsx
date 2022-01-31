@@ -1,6 +1,6 @@
 import React, { ErrorInfo } from 'react'
 import { Page } from 'src/components'
-import { Button, Link, VStack } from 'src/components/chakra'
+import { Button, VStack } from 'src/components/chakra'
 
 type ErrorBoundaryProps = {
   children: React.ReactNode
