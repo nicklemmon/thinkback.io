@@ -16,6 +16,8 @@ export function LoginPage({ handleLogin }: LoginProps) {
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
 
+    console.log(e.target)
+
     const target = e.target as typeof e.target & {
       username: { value: string }
       password: { value: string }
