@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom'
 import { ColorModeScript } from '@chakra-ui/react'
 import { theme } from './theme'
 import { App } from './App'
-import reportWebVitals from './reportWebVitals'
 
 const PARSE_APPLICATION_ID = import.meta.env.VITE_APPLICATION_ID as string
 const PARSE_HOST_URL = import.meta.env.VITE_API_BASE_URL as string
@@ -20,8 +19,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root'),
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
