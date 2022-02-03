@@ -1,5 +1,4 @@
 import { createMachine, assign } from 'xstate'
-import Parse from 'parse'
 import { BrowserHistory } from 'history'
 import { logIn, logOut, signUp } from 'src/helpers/api'
 import { getCurrentUser } from 'src/helpers/user'
@@ -98,14 +97,6 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
     },
     {
       actions: {
-        initializeParse: () => {
-          const PARSE_APPLICATION_ID = process.env.REACT_APP_APPLICATION_ID || ''
-          const PARSE_HOST_URL = process.env.REACT_APP_API_BASE_URL || ''
-          const PARSE_JAVASCRIPT_KEY = process.env.REACT_APP_API_KEY
-
-          Parse.initialize(PARSE_APPLICATION_ID, PARSE_JAVASCRIPT_KEY)
-          Parse.serverURL = PARSE_HOST_URL
-        },
         navigateToAuthPage: _ctx => {
           return history.push('/auth')
         },
