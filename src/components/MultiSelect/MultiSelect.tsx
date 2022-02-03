@@ -1,14 +1,6 @@
 import { useSelect, useMultipleSelection } from 'downshift'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import {
-  Box,
-  FormLabel,
-  HStack,
-  ListItem,
-  Tag,
-  TagLabel,
-  TagCloseButton,
-} from 'src/components/chakra'
+import { Box, FormLabel, HStack, Tag, TagLabel, TagCloseButton } from 'src/components/chakra'
 
 type MultiSelectOptions = any[] | []
 
@@ -134,8 +126,9 @@ export function MultiSelect({
           >
             <ul style={{ listStyleType: 'none' }} {...getMenuProps()}>
               {getFilteredItems(formattedOptions).map((item, index) => (
-                <ListItem
+                <Box
                   key={`${item}-${index}`}
+                  as="li"
                   paddingY={2}
                   paddingX={4}
                   cursor="pointer"
@@ -144,7 +137,7 @@ export function MultiSelect({
                   {...getItemProps({ item, index })}
                 >
                   {item}
-                </ListItem>
+                </Box>
               ))}
             </ul>
           </Box>

@@ -29,7 +29,7 @@ export function LoginPage({ handleLogin }: LoginProps) {
   return (
     <Page>
       <Page.Header>
-        <Page.Title>Login Page</Page.Title>
+        <Page.Title>Login</Page.Title>
       </Page.Header>
 
       <Page.Content>
