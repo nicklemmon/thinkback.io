@@ -1,12 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { Box, Link, HStack, LinkProps } from 'src/components/chakra'
+import type { LinkProps } from 'src/components/chakra'
+import { Box, Button, Link, HStack, List, ListItem } from 'src/components/chakra'
 import { Container } from 'src/components'
 
 type HeaderProps = {
-  children: React.ReactNode
+  isAuthorized: boolean
+  onLogOut?: () => void
 }
 
-function Header({ children }: HeaderProps) {
+function Header({ isAuthorized, onLogOut }: HeaderProps) {
   return (
     <Box
       as="header"
@@ -16,16 +18,45 @@ function Header({ children }: HeaderProps) {
       color="gray.200"
     >
       <Container display="flex" alignItems="center" justifyContent="space-between">
-        {children}
-      </Container>
-    </Box>
-  )
-}
+        <Link
+          fontWeight="700"
+          textDecor="none"
+          color="gray.100"
+          to={isAuthorized ? '/memories' : '/auth'}
+        >
+          ThinkBack
+        </Link>
 
-function Nav({ children }: HeaderProps) {
-  return (
-    <Box as="nav">
-      <HStack>{children}</HStack>
+        {isAuthorized ? (
+          <Box as="nav">
+            <HStack as={List}>
+              <ListItem>
+                <HeaderLink to="/memories">Memories</HeaderLink>
+              </ListItem>
+              <ListItem>
+                <HeaderLink to="/kids">Kids</HeaderLink>
+              </ListItem>
+              <ListItem>
+                <HeaderLink to="/profile">Profile</HeaderLink>
+              </ListItem>
+
+              {onLogOut ? (
+                <ListItem>
+                  <Button
+                    level="secondary"
+                    size="sm"
+                    colorScheme="whiteAlpha"
+                    color="white"
+                    onClick={onLogOut}
+                  >
+                    Log Out
+                  </Button>
+                </ListItem>
+              ) : null}
+            </HStack>
+          </Box>
+        ) : null}
+      </Container>
     </Box>
   )
 }
@@ -41,8 +72,5 @@ function HeaderLink({
     </Link>
   )
 }
-
-Header.Nav = Nav
-Header.Link = HeaderLink
 
 export { Header }
