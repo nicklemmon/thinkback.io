@@ -1,23 +1,25 @@
 import React from 'react'
-import { Box } from 'src/components/chakra'
-import type { BoxProps } from 'src/components/chakra'
+import { Box, Text, Link } from 'src/components/chakra'
 import { Container } from 'src/components'
 
-type FooterProps = BoxProps & {
-  children: React.ReactNode
-}
-
-export function Footer({ children, ...props }: FooterProps) {
+export function Footer() {
   return (
-    <Box
-      position="sticky"
-      top="100%"
-      as="footer"
-      backgroundColor="gray.100"
-      color="gray.600"
-      {...props}
-    >
-      <Container>{children}</Container>
+    <Box position="sticky" top="100%" as="footer" backgroundColor="gray.100" color="gray.600">
+      <Container>
+        <Text as="p">
+          All rights reserved, {/* @ts-expect-error */}
+          <Link
+            as="a"
+            href="https://nicklemmon.com"
+            rel="noopener noreferrer"
+            target="_blank"
+            color="currentColor"
+          >
+            Nick Lemmon
+          </Link>{' '}
+          {new Date().getFullYear()}
+        </Text>
+      </Container>
     </Box>
   )
 }
