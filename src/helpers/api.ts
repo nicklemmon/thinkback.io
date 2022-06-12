@@ -18,7 +18,11 @@ export async function signUp(username: Username, email: string, password: string
 export async function logIn(username: Username, password: string) {
   return Parse.User.logIn(username, password)
     .then(res => Promise.resolve(res))
-    .catch(err => Promise.reject(err))
+    .catch(err => {
+      console.error('logIn err:', err)
+
+      return Promise.reject(err)
+    })
 }
 
 export async function logOut() {
