@@ -112,7 +112,8 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           return { user }
         }),
         // TODO: pass error message to the toast
-        handleLoginFailure: () => {
+        handleLoginFailure: e => {
+          console.log('login failure error', e)
           return showToast({ message: 'Login failed', variant: 'error' })
         },
         handleLogOutFailure: () => {
