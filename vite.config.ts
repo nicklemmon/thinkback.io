@@ -4,7 +4,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   optimizeDeps: {
-    exclude: ['parse'],
+    exclude: ['xstate'],
   },
   plugins: [react(), tsconfigPaths()],
 })
