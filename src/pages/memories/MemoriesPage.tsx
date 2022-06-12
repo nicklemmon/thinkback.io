@@ -13,6 +13,10 @@ import {
   GridItem,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
   Select,
   TabList,
   TabPanels,
@@ -92,6 +96,38 @@ export function MemoriesPage() {
 
         {state.matches('error') ? (
           <ApiAlert title="Memories failed to load" onRetry={() => send('RETRY')} />
+        ) : null}
+
+        {state.matches('confirmingDeletion') || state.matches('deleting') ? (
+          <Modal isOpen onClose={() => send('CANCEL_DELETION')}>
+            <ModalHeader>Delete Memory</ModalHeader>
+
+            <ModalBody>
+              <p>
+                Are you sure you want to delete <strong>{memoryTitle}</strong>?
+              </p>
+            </ModalBody>
+
+            <ModalFooter>
+              <HStack>
+                <Button
+                  level="primary"
+                  onClick={() => send({ type: 'CONFIRM_DELETION' })}
+                  isLoading={state.matches('deleting')}
+                >
+                  Delete
+                </Button>
+
+                <Button
+                  level="secondary"
+                  onClick={() => send({ type: 'CANCEL_DELETION' })}
+                  isDisabled={state.matches('deleting')}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </Modal>
         ) : null}
 
         {state.matches('success') ? (

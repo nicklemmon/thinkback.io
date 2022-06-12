@@ -1,6 +1,6 @@
 import { createMachine, assign } from 'xstate'
 import { Kid, Memory } from 'src/types'
-import { getMemories, getKids } from 'src/helpers/api'
+import { deleteMemory, getMemories, getKids } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
 type MemoriesPageMachineContext = {
@@ -17,6 +17,9 @@ type MemoriesPageEvents =
   | { type: 'CHANGE_VIEW'; view: View }
   | { type: 'FILTER_SUBMIT'; filterBy: string | undefined; kidId: string | undefined }
   | { type: 'CLEAR_FILTERS' }
+  | { type: 'DELETE'; memory: Parse.Object<Memory> }
+  | { type: 'CONFIRM_DELETION' }
+  | { type: 'CANCEL_DELETION' }
 
 const memoriesPageMachine = (history: BrowserHistory) => {
   return createMachine<MemoriesPageMachineContext, MemoriesPageEvents>(
@@ -46,11 +49,13 @@ const memoriesPageMachine = (history: BrowserHistory) => {
             },
           },
         },
+
         error: {
           on: {
             RETRY: 'loading',
           },
         },
+
         success: {
           on: {
             CHANGE_VIEW: {
@@ -64,6 +69,31 @@ const memoriesPageMachine = (history: BrowserHistory) => {
             CLEAR_FILTERS: {
               actions: 'clearFilters',
               target: 'success',
+            },
+            DELETE: {
+              target: 'confirmingDeletion',
+            },
+          },
+        },
+
+        confirmingDeletion: {
+          on: {
+            CONFIRM_DELETION: 'deleting',
+            CANCEL_DELETION: 'success',
+          },
+        },
+
+        deleting: {
+          invoke: {
+            src: e => {
+              console.log('e', e)
+              return deleteMemory()
+            },
+            onDone: {
+              target: 'deleted',
+            },
+            onError: {
+              target: 'error',
             },
           },
         },
