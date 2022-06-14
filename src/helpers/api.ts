@@ -1,4 +1,4 @@
-import Parse from 'parse'
+import Parse from 'parse/dist/parse.js'
 import { ApiResponse, Kid, Memory, NewMemory, Username } from 'src/types'
 import { getCurrentUser, getSessionToken } from './user'
 

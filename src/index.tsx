@@ -1,5 +1,5 @@
 import React from 'react'
-import Parse from 'parse'
+import Parse from 'parse/dist/parse.js'
 import ReactDOM from 'react-dom'
 import { ColorModeScript } from '@chakra-ui/react'
 import { theme } from './theme'
