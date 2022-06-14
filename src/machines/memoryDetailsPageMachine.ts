@@ -182,8 +182,6 @@ const memoryDetailsPageMachine = (
     },
   }
 
-  // TODO: Not sure why TypeScript is yelling at me here
-  /* @ts-expect-error */
   return createMachine(machineConfig, machineOptions)
 }
 

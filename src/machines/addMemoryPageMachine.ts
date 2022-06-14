@@ -103,7 +103,6 @@ function addMemoryPageMachine(showToast: (toast: Toast) => void) {
     },
   }
 
-  /* @ts-expect-error */
   return createMachine(machineConfig, machineOptions)
 }
 
