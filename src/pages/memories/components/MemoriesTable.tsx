@@ -1,6 +1,8 @@
+import { DeleteIcon } from '@chakra-ui/icons'
 import {
   Link,
   HStack,
+  IconButton,
   Table,
   Text,
   Thead,
@@ -14,7 +16,13 @@ import {
 import { formatDate } from 'src/helpers/date'
 import { Memory } from 'src/types'
 
-export function MemoriesTable({ memories }: { memories: Parse.Object<Memory>[] | [] }) {
+export function MemoriesTable({
+  memories,
+  onDeleteClick,
+}: {
+  memories: Parse.Object<Memory>[] | []
+  onDeleteClick: (memory: Parse.Object<Memory>) => void
+}) {
   return (
     <Table>
       <caption>
@@ -32,6 +40,8 @@ export function MemoriesTable({ memories }: { memories: Parse.Object<Memory>[] |
           <Th>Summary</Th>
 
           <Th>Tags</Th>
+
+          <Th>Actions</Th>
         </Tr>
       </Thead>
 
@@ -55,7 +65,7 @@ export function MemoriesTable({ memories }: { memories: Parse.Object<Memory>[] |
               </Td>
 
               <Td>
-                <Text as="p" fontSize="md" color="gray.500" isTruncated maxW="sm">
+                <Text as="p" fontSize="md" color="gray.500" isTruncated maxW="xs">
                   {memory.get('summary')}
                 </Text>
               </Td>
@@ -66,6 +76,16 @@ export function MemoriesTable({ memories }: { memories: Parse.Object<Memory>[] |
                     return <Tag key={`${memory.id}-${tag.name}`}>{tag.name}</Tag>
                   })}
                 </HStack>
+              </Td>
+
+              <Td isNumeric>
+                <IconButton
+                  aria-label="Delete memory"
+                  colorScheme="purple"
+                  variant="ghost"
+                  onClick={() => onDeleteClick(memory)}
+                  icon={<DeleteIcon />}
+                />
               </Td>
             </Tr>
           )

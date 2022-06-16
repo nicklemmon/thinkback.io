@@ -230,7 +230,12 @@ export function MemoriesPage() {
                   {filteredMemories.length === 0 ? (
                     <p>No memories found</p>
                   ) : (
-                    <MemoriesTable memories={filteredMemories} />
+                    <MemoriesTable
+                      memories={filteredMemories}
+                      onDeleteClick={(memory: Parse.Object<Memory>) =>
+                        send({ type: 'DELETE', memory })
+                      }
+                    />
                   )}
                 </TabPanel>
               </TabPanels>
