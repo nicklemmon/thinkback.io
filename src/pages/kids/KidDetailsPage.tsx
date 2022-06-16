@@ -34,7 +34,7 @@ export function KidDetailsPage() {
           </Button>
 
           <Button
-            level="destructive"
+            level="destructive-secondary"
             isDisabled={state.matches('loading')}
             onClick={() => send({ type: 'DELETE', id: kid?.id })}
           >
