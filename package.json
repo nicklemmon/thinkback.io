@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "vite",
-    "type-check": "twc --noEmit",
+    "type-check": "tsc --noEmit",
     "build": "yarn type-check && vite build",
     "preview": "vite preview"
   },
