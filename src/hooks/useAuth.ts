@@ -3,7 +3,7 @@ import { useMachine } from '@xstate/react'
 import { authMachine } from 'src/machines/authMachine'
 import { useToast } from 'src/hooks'
 
-export function useAuthMachine() {
+export function useAuth() {
   const history = useHistory()
   const { showToast } = useToast()
   const machine = authMachine(history, showToast)
