@@ -84,7 +84,7 @@ export function MemoryDetailsPage() {
           </Button>
 
           <Button
-            level="destructive"
+            level="destructive-secondary"
             onClick={() => send({ type: 'DELETE', id: memory?.id })}
             isDisabled={state.matches('loading')}
           >

@@ -13,6 +13,10 @@ import {
   GridItem,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
   Select,
   TabList,
   TabPanels,
@@ -88,86 +92,137 @@ export function MemoriesPage() {
       </Page.Header>
 
       <Page.Content>
-        {state.matches('loading') ? <Page.Loader /> : null}
-
         {state.matches('error') ? (
           <ApiAlert title="Memories failed to load" onRetry={() => send('RETRY')} />
         ) : null}
 
-        {state.matches('success') ? (
-          <VStack>
-            <Form onSubmit={handleSubmit}>
-              <Grid templateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }} gap={{ base: 2, md: 6 }}>
-                <GridItem>
-                  <FormControl id="memory-filter-by">
-                    <FormLabel htmlFor="memory-filter-by">Filter by</FormLabel>
+        {state.matches('confirmingDeletion') || state.matches('deleting') ? (
+          <Modal isOpen onClose={() => send('CANCEL_DELETION')}>
+            <ModalHeader>Delete Memory</ModalHeader>
 
-                    <Input
-                      name="filterBy"
-                      autoComplete="off"
-                      defaultValue={searchedFilterBy ? searchedFilterBy : ''}
-                    />
-                  </FormControl>
-                </GridItem>
+            <ModalBody>
+              <p>
+                Are you sure you want to delete{' '}
+                <strong>{state.context.memoryToDelete?.get('title')}</strong>?
+              </p>
+            </ModalBody>
 
-                <GridItem>
-                  <FormControl id="memory-kid-id">
-                    <FormLabel htmlFor="memory-kid-id">Kid</FormLabel>
+            <ModalFooter>
+              <HStack>
+                <Button
+                  level="destructive-primary"
+                  onClick={() =>
+                    send({ type: 'CONFIRM_DELETION', memory: state.context.memoryToDelete! })
+                  }
+                  isLoading={state.matches('deleting')}
+                >
+                  Delete
+                </Button>
 
-                    <Select name="kidId" defaultValue={searchedKidId ? searchedKidId : 'all'}>
-                      <option value="all">All Kids</option>
+                <Button
+                  level="destructive-secondary"
+                  onClick={() => send('CANCEL_DELETION')}
+                  isDisabled={state.matches('deleting')}
+                >
+                  Cancel
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </Modal>
+        ) : null}
 
-                      {state.context.kids?.map(kid => {
-                        return (
-                          <option key={kid.id} value={kid.id}>
-                            {kid.get('name')}
-                          </option>
-                        )
-                      })}
-                    </Select>
-                  </FormControl>
-                </GridItem>
+        <VStack>
+          <Form onSubmit={handleSubmit}>
+            <Grid templateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }} gap={{ base: 2, md: 6 }}>
+              <GridItem>
+                <FormControl id="memory-filter-by">
+                  <FormLabel htmlFor="memory-filter-by">Filter by</FormLabel>
 
-                <GridItem>
-                  {/* Just to ensure the button is aligned consistently with other form fields */}
-                  <FormLabel role="presentation">
-                    <Box opacity="0">Spacer</Box>
-                  </FormLabel>
+                  <Input
+                    name="filterBy"
+                    autoComplete="off"
+                    isDisabled={state.matches('loading')}
+                    defaultValue={searchedFilterBy ? searchedFilterBy : ''}
+                  />
+                </FormControl>
+              </GridItem>
 
-                  <HStack>
-                    <Button level="secondary" type="submit">
-                      Apply Filters
+              <GridItem>
+                <FormControl id="memory-kid-id">
+                  <FormLabel htmlFor="memory-kid-id">Kid</FormLabel>
+
+                  <Select
+                    name="kidId"
+                    defaultValue={searchedKidId ? searchedKidId : 'all'}
+                    isDisabled={state.matches('loading')}
+                  >
+                    <option value="all">All Kids</option>
+
+                    {state.context.kids?.map(kid => {
+                      return (
+                        <option key={kid.id} value={kid.id}>
+                          {kid.get('name')}
+                        </option>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              </GridItem>
+
+              <GridItem>
+                {/* Just to ensure the button is aligned consistently with other form fields */}
+                <FormLabel role="presentation">
+                  <Box opacity="0">Spacer</Box>
+                </FormLabel>
+
+                <HStack>
+                  <Button level="secondary" type="submit" isDisabled={state.matches('loading')}>
+                    Apply Filters
+                  </Button>
+
+                  {searchedFilterBy || searchedKidId ? (
+                    <Button
+                      level="tertiary"
+                      onClick={() => send('CLEAR_FILTERS')}
+                      isDisabled={state.matches('loading')}
+                    >
+                      Clear Filters
                     </Button>
+                  ) : null}
+                </HStack>
+              </GridItem>
+            </Grid>
+          </Form>
 
-                    {searchedFilterBy || searchedKidId ? (
-                      <Button level="tertiary" onClick={() => send('CLEAR_FILTERS')}>
-                        Clear Filters
-                      </Button>
-                    ) : null}
-                  </HStack>
-                </GridItem>
-              </Grid>
-            </Form>
+          {state.matches('loading') ? <Page.Loader /> : null}
 
-            <Tabs
-              variant="enclosed"
-              colorScheme="purple"
-              index={activeTab}
-              onChange={handleTabsChange}
-              width="100%"
-            >
-              <TabList>
-                <Tab>Grid View</Tab>
+          <Tabs
+            variant="enclosed"
+            colorScheme="purple"
+            index={activeTab}
+            onChange={handleTabsChange}
+            width="100%"
+          >
+            <TabList>
+              <Tab isDisabled={state.matches('loading')}>Grid View</Tab>
 
-                <Tab>Table View</Tab>
-              </TabList>
+              <Tab isDisabled={state.matches('loading')}>Table View</Tab>
+            </TabList>
 
+            {state.matches('idle') ||
+            state.matches('confirmingDeletion') ||
+            state.matches('deleting') ? (
               <TabPanels>
                 <TabPanel padding="0" paddingTop="6">
                   {filteredMemories.length === 0 ? (
                     <p>No memories found</p>
                   ) : (
-                    <MemoriesGrid memories={filteredMemories} />
+                    <MemoriesGrid
+                      memories={filteredMemories}
+                      onDeleteClick={(memory: Parse.Object<Memory>) =>
+                        send({ type: 'DELETE', memory })
+                      }
+                    />
                   )}
                 </TabPanel>
 
@@ -175,13 +230,18 @@ export function MemoriesPage() {
                   {filteredMemories.length === 0 ? (
                     <p>No memories found</p>
                   ) : (
-                    <MemoriesTable memories={filteredMemories} />
+                    <MemoriesTable
+                      memories={filteredMemories}
+                      onDeleteClick={(memory: Parse.Object<Memory>) =>
+                        send({ type: 'DELETE', memory })
+                      }
+                    />
                   )}
                 </TabPanel>
               </TabPanels>
-            </Tabs>
-          </VStack>
-        ) : null}
+            ) : null}
+          </Tabs>
+        </VStack>
       </Page.Content>
     </Page>
   )
