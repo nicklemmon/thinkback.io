@@ -14,10 +14,10 @@ import {
   StatNumber,
   VStack,
 } from 'src/components/chakra'
-import { useKidDetailsPageMachine } from 'src/hooks'
+import { useKidDetailsPage } from 'src/hooks'
 
 export function KidDetailsPage() {
-  const [state, send] = useKidDetailsPageMachine()
+  const [state, send] = useKidDetailsPage()
   const { kid } = state.context
   const hasForm =
     kid &&

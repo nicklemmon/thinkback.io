@@ -19,12 +19,12 @@ import {
 import { toDateInput } from 'src/helpers/date'
 import { getKidById } from 'src/helpers/kid'
 import { Tag } from 'src/types'
-import { useMemoryDetailsPageMachine } from 'src/hooks'
+import { useMemoryDetailsPage } from 'src/hooks'
 import { TAG_OPTIONS } from 'src/constants'
 import { MemoryDetailsPageMachineContext } from 'src/machines'
 
 export function MemoryDetailsPage() {
-  const [state, send] = useMemoryDetailsPageMachine()
+  const [state, send] = useMemoryDetailsPage()
   const context = state.context as MemoryDetailsPageMachineContext
   // This casting shouldn't be necessary - but was intermittently encountering an error otherwise
   const { memory } = context

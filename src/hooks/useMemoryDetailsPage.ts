@@ -7,7 +7,7 @@ type MemoryDetailsPageParams = {
   id?: string
 }
 
-export function useMemoryDetailsPageMachine() {
+export function useMemoryDetailsPage() {
   const params = useParams<MemoryDetailsPageParams>()
   const history = useHistory()
   const { showToast } = useToast()

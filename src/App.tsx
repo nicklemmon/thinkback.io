@@ -15,7 +15,7 @@ import {
 import { isProd } from 'src/constants'
 import { DefaultLayout } from './layouts'
 import { ProtectedRoute } from 'src/components'
-import { useAuthMachine } from './hooks'
+import { useAuth } from './hooks'
 import { Providers } from './Providers'
 
 export function App() {
@@ -27,7 +27,7 @@ export function App() {
 }
 
 function AppContent() {
-  const [state, send] = useAuthMachine()
+  const [state, send] = useAuth()
   const authorized = state.matches('authorized')
 
   return (

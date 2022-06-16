@@ -6,7 +6,7 @@ type KidDetailsPageParams = {
   id?: string
 }
 
-export function useKidDetailsPageMachine() {
+export function useKidDetailsPage() {
   const params = useParams<KidDetailsPageParams>()
   const history = useHistory()
   const machine = kidDetailsPageMachine(params, history)
