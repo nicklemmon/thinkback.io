@@ -1,6 +1,6 @@
 export * from './useAddMemoryPage'
 export * from './useAddKidPage'
-export * from './useAuthMachine'
+export * from './useAuth'
 export * from './useKidDetailsPage'
 export * from './useMemoriesPage'
 export * from './useMemoryDetailsPage'
