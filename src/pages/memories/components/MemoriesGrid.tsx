@@ -22,8 +22,8 @@ export function MemoriesGrid({
         const date = formatDate(memory.get('recordedDate') as unknown as Date)
 
         return (
-          <Box
-            as={Card}
+          <Card
+            hasShadow={true}
             key={memory.id}
             role="listitem"
             position="relative"
@@ -73,7 +73,7 @@ export function MemoriesGrid({
                 />
               </Box>
             </Card.Footer>
-          </Box>
+          </Card>
         )
       })}
     </Grid>

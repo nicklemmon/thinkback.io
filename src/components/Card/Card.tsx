@@ -2,11 +2,19 @@ import { Box, BoxProps } from 'src/components/chakra'
 
 type CardComponentProps = {
   children: React.ReactNode
+  hasShadow?: boolean
 } & BoxProps
 
-function Card({ children, ...props }: CardComponentProps) {
+function Card({ children, hasShadow, ...props }: CardComponentProps) {
   return (
-    <Box borderWidth="1px" borderRadius="lg" boxShadow="xl" bg="white" width="100%" {...props}>
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      boxShadow={hasShadow ? 'xl' : undefined}
+      bg="white"
+      width="100%"
+      {...props}
+    >
       {children}
     </Box>
   )

@@ -50,6 +50,7 @@ function AppContent() {
                 password: submitEvent.password,
               })
             }
+            isLoggingIn={state.matches('loggingIn')}
           />
         </ProtectedRoute>
 

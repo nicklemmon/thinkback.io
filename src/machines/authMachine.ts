@@ -48,7 +48,6 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           invoke: {
             // TODO: Boo any
             src: (_context, event: any) => {
-              console.log('event', event)
               return logIn(event.username, event.password)
             },
             onDone: {
@@ -103,26 +102,30 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
         navigateToAuthPage: _ctx => {
           return history.push('/auth')
         },
+
         navigateToDashboard: _ctx => {
           return history.push('/memories')
         },
+
         navigateToSignUp: _ctx => {
           return history.push('/sign-up')
         },
+
         assignUserToCtx: assign((_ctx: AuthMachineContext) => {
           const user = getCurrentUser()
 
           return { user }
         }),
+
         // TODO: pass error message to the toast
         handleLoginFailure: (a, b) => {
-          console.log('login failure error', a)
-          console.log('login failure error', b)
           return showToast({ message: 'Login failed', variant: 'error' })
         },
+
         handleLogOutFailure: () => {
           return showToast({ message: 'Log out failed. Please try again.', variant: 'error' })
         },
+
         // TODO: pass error message to the toast
         handleSignUpFailure: () => {
           return showToast({ message: 'Sign up failed.', variant: 'error' })

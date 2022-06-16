@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Form, Page } from 'src/components'
+import { Card, Form, Page } from 'src/components'
 import { Box, Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
 
 type HandleLoginParams = {
@@ -10,9 +10,10 @@ type HandleLoginParams = {
 
 type LoginProps = {
   handleLogin: (params: HandleLoginParams) => void
+  isLoggingIn: boolean
 }
 
-export function LoginPage({ handleLogin }: LoginProps) {
+export function LoginPage({ handleLogin, isLoggingIn }: LoginProps) {
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
 
@@ -33,25 +34,33 @@ export function LoginPage({ handleLogin }: LoginProps) {
       </Page.Header>
 
       <Page.Content>
-        <Form onSubmit={handleSubmit}>
-          <VStack>
-            <FormControl id="username">
-              <FormLabel htmlFor="username">Username</FormLabel>
+        <Card>
+          <Card.Content>
+            <Box paddingY={6} paddingX={3}>
+              <Box maxW="3xl">
+                <Form onSubmit={handleSubmit}>
+                  <VStack>
+                    <FormControl id="username" isDisabled={isLoggingIn}>
+                      <FormLabel htmlFor="username">Username</FormLabel>
 
-              <Input type="text" name="username" autoComplete="username" />
-            </FormControl>
+                      <Input type="text" name="username" autoComplete="username" />
+                    </FormControl>
 
-            <FormControl id="password">
-              <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormControl id="password" isDisabled={isLoggingIn}>
+                      <FormLabel htmlFor="password">Password</FormLabel>
 
-              <Input type="password" name="password" autoComplete="current-password" />
-            </FormControl>
+                      <Input type="password" name="password" autoComplete="current-password" />
+                    </FormControl>
 
-            <Button level="primary" type="submit">
-              Log In
-            </Button>
-          </VStack>
-        </Form>
+                    <Button level="primary" type="submit" isLoading={isLoggingIn}>
+                      Log In
+                    </Button>
+                  </VStack>
+                </Form>
+              </Box>
+            </Box>
+          </Card.Content>
+        </Card>
 
         <Box marginTop="5">
           <p>
