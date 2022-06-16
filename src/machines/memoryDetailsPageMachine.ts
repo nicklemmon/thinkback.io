@@ -164,18 +164,22 @@ const memoryDetailsPageMachine = (
 
         return { memory: memoryRes, kids: kidsRes }
       }),
+
       // TODO: Fix this to handle `Promise.all` errors
       setErrorToCtx: assign((_ctx, event: any) => {
         return { error: event }
       }),
+
       handleSuccess: () => {
         return showToast({ message: 'Memory updated', variant: 'success' })
       },
+
       handleDeleted: () => {
         showToast({ message: 'Memory deleted', variant: 'success' })
 
         return history.push('/memories')
       },
+
       handleError: () => {
         return showToast({ message: 'Memory failed to update. Try again.', variant: 'error' })
       },

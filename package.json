@@ -31,7 +31,8 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "tsc --noEmit && vite build",
+    "type-check": "twc --noEmit",
+    "build": "yarn type-check && vite build",
     "preview": "vite preview"
   },
   "eslintConfig": {

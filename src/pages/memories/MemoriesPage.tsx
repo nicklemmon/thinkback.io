@@ -104,23 +104,26 @@ export function MemoriesPage() {
 
             <ModalBody>
               <p>
-                Are you sure you want to delete <strong>{memoryTitle}</strong>?
+                Are you sure you want to delete{' '}
+                <strong>{state.context.memoryToDelete?.get('title')}</strong>?
               </p>
             </ModalBody>
 
             <ModalFooter>
               <HStack>
                 <Button
-                  level="primary"
-                  onClick={() => send({ type: 'CONFIRM_DELETION' })}
+                  level="destructive-primary"
+                  onClick={() =>
+                    send({ type: 'CONFIRM_DELETION', memory: state.context.memoryToDelete! })
+                  }
                   isLoading={state.matches('deleting')}
                 >
                   Delete
                 </Button>
 
                 <Button
-                  level="secondary"
-                  onClick={() => send({ type: 'CANCEL_DELETION' })}
+                  level="destructive-secondary"
+                  onClick={() => send('CANCEL_DELETION')}
                   isDisabled={state.matches('deleting')}
                 >
                   Cancel
@@ -130,7 +133,9 @@ export function MemoriesPage() {
           </Modal>
         ) : null}
 
-        {state.matches('success') ? (
+        {state.matches('idle') ||
+        state.matches('confirmingDeletion') ||
+        state.matches('deleting') ? (
           <VStack>
             <Form onSubmit={handleSubmit}>
               <Grid templateColumns={{ base: '1fr', md: '1fr 1fr 1fr' }} gap={{ base: 2, md: 6 }}>
@@ -203,7 +208,12 @@ export function MemoriesPage() {
                   {filteredMemories.length === 0 ? (
                     <p>No memories found</p>
                   ) : (
-                    <MemoriesGrid memories={filteredMemories} />
+                    <MemoriesGrid
+                      memories={filteredMemories}
+                      onDeleteClick={(memory: Parse.Object<Memory>) =>
+                        send({ type: 'DELETE', memory })
+                      }
+                    />
                   )}
                 </TabPanel>
 

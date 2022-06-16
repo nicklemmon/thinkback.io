@@ -4,10 +4,11 @@ import { deleteMemory, getMemories, getKids } from 'src/helpers/api'
 import { BrowserHistory } from 'history'
 
 type MemoriesPageMachineContext = {
-  view?: string
   kids: Parse.Object<Kid>[] | []
   memories: Parse.Object<Memory>[] | []
-  error: Object | undefined
+  view?: string
+  memoryToDelete?: Parse.Object<Memory>
+  error?: Object
 }
 
 type View = 'grid' | 'table'
@@ -18,7 +19,7 @@ type MemoriesPageEvents =
   | { type: 'FILTER_SUBMIT'; filterBy: string | undefined; kidId: string | undefined }
   | { type: 'CLEAR_FILTERS' }
   | { type: 'DELETE'; memory: Parse.Object<Memory> }
-  | { type: 'CONFIRM_DELETION' }
+  | { type: 'CONFIRM_DELETION'; memory: Parse.Object<Memory> }
   | { type: 'CANCEL_DELETION' }
 
 const memoriesPageMachine = (history: BrowserHistory) => {
@@ -40,7 +41,7 @@ const memoriesPageMachine = (history: BrowserHistory) => {
               return Promise.all([getMemories(), getKids()])
             },
             onDone: {
-              target: 'success',
+              target: 'idle',
               actions: 'setMemoriesToCtx',
             },
             onError: {
@@ -56,21 +57,22 @@ const memoriesPageMachine = (history: BrowserHistory) => {
           },
         },
 
-        success: {
+        idle: {
           on: {
             CHANGE_VIEW: {
               actions: 'updateView',
-              target: 'success',
+              target: 'idle',
             },
             FILTER_SUBMIT: {
               actions: 'updateFilters',
-              target: 'success',
+              target: 'idle',
             },
             CLEAR_FILTERS: {
               actions: 'clearFilters',
-              target: 'success',
+              target: 'idle',
             },
             DELETE: {
+              actions: 'setMemoryToDeleteToCtx',
               target: 'confirmingDeletion',
             },
           },
@@ -79,18 +81,17 @@ const memoriesPageMachine = (history: BrowserHistory) => {
         confirmingDeletion: {
           on: {
             CONFIRM_DELETION: 'deleting',
-            CANCEL_DELETION: 'success',
+            CANCEL_DELETION: 'idle',
           },
         },
 
         deleting: {
           invoke: {
             src: e => {
-              console.log('e', e)
-              return deleteMemory()
+              return deleteMemory(e.memoryToDelete?.id ? e.memoryToDelete.id : '')
             },
             onDone: {
-              target: 'deleted',
+              target: 'loading',
             },
             onError: {
               target: 'error',
@@ -106,15 +107,22 @@ const memoriesPageMachine = (history: BrowserHistory) => {
 
           return { memories, kids }
         }),
+
+        setMemoryToDeleteToCtx: assign((_ctx, event: any) => {
+          return { memoryToDelete: event.memory }
+        }),
+
         setErrorToCtx: assign((_ctx, event) => {
           return { error: event }
         }),
+
         updateView: (_ctx, event: any) => {
           return history.push({
             pathname: `/memories/view/${event.view}`,
             search: history.location.search,
           })
         },
+
         updateFilters: (_ctx, event: any) => {
           const { filterBy, kidId } = event
 
@@ -123,6 +131,7 @@ const memoriesPageMachine = (history: BrowserHistory) => {
             search: `?filterBy=${filterBy}&kidId=${kidId}`,
           })
         },
+
         clearFilters: _ctx => {
           return history.replace({
             pathname: history.location.pathname,
