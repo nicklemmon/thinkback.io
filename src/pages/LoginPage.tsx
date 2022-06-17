@@ -35,31 +35,29 @@ export function LoginPage({ handleLogin, isLoggingIn }: LoginProps) {
 
       <Page.Content>
         <Card>
-          <Card.Content>
-            <Box paddingY={6} paddingX={3}>
-              <Box maxW="3xl">
-                <Form onSubmit={handleSubmit}>
-                  <VStack>
-                    <FormControl id="username" isDisabled={isLoggingIn}>
-                      <FormLabel htmlFor="username">Username</FormLabel>
+          <Box padding={6}>
+            <Box maxW="3xl">
+              <Form onSubmit={handleSubmit}>
+                <VStack>
+                  <FormControl id="username" isDisabled={isLoggingIn}>
+                    <FormLabel htmlFor="username">Username</FormLabel>
 
-                      <Input type="text" name="username" autoComplete="username" />
-                    </FormControl>
+                    <Input type="text" name="username" autoComplete="username" />
+                  </FormControl>
 
-                    <FormControl id="password" isDisabled={isLoggingIn}>
-                      <FormLabel htmlFor="password">Password</FormLabel>
+                  <FormControl id="password" isDisabled={isLoggingIn}>
+                    <FormLabel htmlFor="password">Password</FormLabel>
 
-                      <Input type="password" name="password" autoComplete="current-password" />
-                    </FormControl>
+                    <Input type="password" name="password" autoComplete="current-password" />
+                  </FormControl>
 
-                    <Button level="primary" type="submit" isLoading={isLoggingIn}>
-                      Log In
-                    </Button>
-                  </VStack>
-                </Form>
-              </Box>
+                  <Button level="primary" type="submit" isLoading={isLoggingIn}>
+                    Log In
+                  </Button>
+                </VStack>
+              </Form>
             </Box>
-          </Card.Content>
+          </Box>
         </Card>
 
         <Box marginTop="5">

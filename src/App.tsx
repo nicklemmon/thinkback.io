@@ -64,6 +64,7 @@ function AppContent() {
                 password: submitEvent.password,
               })
             }}
+            isSigningUp={state.matches('signingUp')}
           />
         </ProtectedRoute>
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Form, Page } from 'src/components'
+import { Card, Form, Page } from 'src/components'
 import { Box, Button, FormControl, FormLabel, Input, Link, VStack } from 'src/components/chakra'
 
 type HandleSignUpParams = {
@@ -11,9 +11,10 @@ type HandleSignUpParams = {
 
 type SignUpProps = {
   handleSignUp: (params: HandleSignUpParams) => void
+  isSigningUp: boolean
 }
 
-export function SignUpPage({ handleSignUp }: SignUpProps) {
+export function SignUpPage({ handleSignUp, isSigningUp }: SignUpProps) {
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault()
 
@@ -29,6 +30,8 @@ export function SignUpPage({ handleSignUp }: SignUpProps) {
     return handleSignUp({ username, email, password })
   }
 
+  console.log('isSigningUp', isSigningUp)
+
   return (
     <Page>
       <Page.Header>
@@ -36,29 +39,37 @@ export function SignUpPage({ handleSignUp }: SignUpProps) {
       </Page.Header>
 
       <Page.Content>
-        <Form onSubmit={handleSubmit}>
-          <VStack>
-            <FormControl id="username">
-              <FormLabel>Username</FormLabel>
+        <Card>
+          <Box padding={6}>
+            <Box maxW="3xl">
+              <Form onSubmit={handleSubmit}>
+                <VStack>
+                  <FormControl id="username" isDisabled={isSigningUp}>
+                    <FormLabel>Username</FormLabel>
 
-              <Input type="text" name="username" autoComplete="username" />
-            </FormControl>
+                    <Input type="text" name="username" autoComplete="username" />
+                  </FormControl>
 
-            <FormControl id="email">
-              <FormLabel>Email</FormLabel>
+                  <FormControl id="email" isDisabled={isSigningUp}>
+                    <FormLabel>Email</FormLabel>
 
-              <Input type="text" name="email" autoComplete="email" />
-            </FormControl>
+                    <Input type="text" name="email" autoComplete="email" />
+                  </FormControl>
 
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
+                  <FormControl id="password" isDisabled={isSigningUp}>
+                    <FormLabel>Password</FormLabel>
 
-              <Input type="password" name="password" autoComplete="current-password" />
-            </FormControl>
+                    <Input type="password" name="password" autoComplete="current-password" />
+                  </FormControl>
 
-            <Button level="primary">Sign Up</Button>
-          </VStack>
-        </Form>
+                  <Button level="primary" type="submit" isLoading={isSigningUp}>
+                    Sign Up
+                  </Button>
+                </VStack>
+              </Form>
+            </Box>
+          </Box>
+        </Card>
 
         <Box marginTop="5">
           <p>

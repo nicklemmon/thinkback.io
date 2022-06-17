@@ -37,6 +37,7 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
             },
           ],
         },
+
         unauthorized: {
           entry: 'navigateToAuthPage',
           on: {
@@ -44,6 +45,7 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
             SIGN_UP: 'signingUp',
           },
         },
+
         loggingIn: {
           invoke: {
             // TODO: Boo any
@@ -60,11 +62,13 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
             },
           },
         },
+
         authorized: {
           on: {
             LOG_OUT: 'loggingOut',
           },
         },
+
         loggingOut: {
           invoke: {
             src: logOut,
@@ -78,9 +82,11 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
             },
           },
         },
+
         signUp: {
           entry: 'navigateToSignUp',
         },
+
         signingUp: {
           invoke: {
             // TODO: Boo any
