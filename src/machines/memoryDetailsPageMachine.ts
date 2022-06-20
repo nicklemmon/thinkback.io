@@ -1,7 +1,7 @@
 import { createMachine, assign, MachineConfig } from 'xstate'
+import type { NavigateFunction } from 'react-router-dom'
 import { Kid, Memory, Toast } from 'src/types'
 import { deleteMemory, getMemory, updateMemory, getKids } from 'src/helpers/api'
-import { BrowserHistory } from 'history'
 
 export type MemoryDetailsPageMachineContext = {
   memory: Parse.Object<Memory> | undefined
@@ -38,7 +38,7 @@ type MemoryDetailsPageParams = {
 
 const memoryDetailsPageMachine = (
   queryStringParams: MemoryDetailsPageParams,
-  history: BrowserHistory,
+  navigate: NavigateFunction,
   showToast: (toast: Toast) => void,
 ) => {
   const machineConfig: MachineConfig<
@@ -177,7 +177,7 @@ const memoryDetailsPageMachine = (
       handleDeleted: () => {
         showToast({ message: 'Memory deleted', variant: 'success' })
 
-        return history.push('/memories')
+        return navigate('/memories')
       },
 
       handleError: () => {

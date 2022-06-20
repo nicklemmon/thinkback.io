@@ -3,14 +3,14 @@ import { Header, Footer } from 'src/components'
 
 type DefaultLayoutProps = {
   children: React.ReactNode
-  isAuthorized: boolean
+  authenticated: boolean
   onLogOut?: () => void
 }
 
-export function DefaultLayout({ children, isAuthorized, onLogOut }: DefaultLayoutProps) {
+export function DefaultLayout({ children, authenticated, onLogOut }: DefaultLayoutProps) {
   return (
     <Box minHeight="100vh">
-      <Header isAuthorized={isAuthorized} onLogOut={onLogOut} />
+      <Header authenticated={authenticated} onLogOut={onLogOut} />
 
       <main>{children}</main>
 

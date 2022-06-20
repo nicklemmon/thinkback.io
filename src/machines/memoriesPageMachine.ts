@@ -1,7 +1,7 @@
 import { createMachine, assign } from 'xstate'
-import { Kid, Memory } from 'src/types'
+import type { Location, NavigateFunction } from 'react-router-dom'
+import type { Kid, Memory } from 'src/types'
 import { deleteMemory, getMemories, getKids } from 'src/helpers/api'
-import { BrowserHistory } from 'history'
 
 type MemoriesPageMachineContext = {
   kids: Parse.Object<Kid>[] | []
@@ -22,7 +22,7 @@ type MemoriesPageEvents =
   | { type: 'CONFIRM_DELETION'; memory: Parse.Object<Memory> }
   | { type: 'CANCEL_DELETION' }
 
-const memoriesPageMachine = (history: BrowserHistory) => {
+const memoriesPageMachine = (navigate: NavigateFunction, location: Location) => {
   return createMachine<MemoriesPageMachineContext, MemoriesPageEvents>(
     {
       id: 'memoriesPage',
@@ -117,26 +117,34 @@ const memoriesPageMachine = (history: BrowserHistory) => {
         }),
 
         updateView: (_ctx, event: any) => {
-          return history.push({
+          return navigate({
             pathname: `/memories/view/${event.view}`,
-            search: history.location.search,
+            search: location.search,
           })
         },
 
         updateFilters: (_ctx, event: any) => {
           const { filterBy, kidId } = event
 
-          return history.replace({
-            pathname: history.location.pathname,
-            search: `?filterBy=${filterBy}&kidId=${kidId}`,
-          })
+          return navigate(
+            {
+              pathname: location.pathname,
+              search: `?filterBy=${filterBy}&kidId=${kidId}`,
+            },
+            {
+              replace: true,
+            },
+          )
         },
 
         clearFilters: _ctx => {
-          return history.replace({
-            pathname: history.location.pathname,
-            search: '',
-          })
+          return navigate(
+            {
+              pathname: location.pathname,
+              search: '',
+            },
+            { replace: true },
+          )
         },
       },
     },

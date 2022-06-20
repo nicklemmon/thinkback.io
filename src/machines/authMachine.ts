@@ -1,12 +1,12 @@
 import { createMachine, assign } from 'xstate'
-import { BrowserHistory } from 'history'
 import { logIn, logOut, signUp } from 'src/helpers/api'
 import { getCurrentUser } from 'src/helpers/user'
-import { Toast as ToastType } from 'src/types'
+import type { Toast as ToastType } from 'src/types'
+import type { NavigateFunction } from 'react-router-dom'
 
 type AuthMachineContext = {
   user: Object | undefined
-  history: BrowserHistory
+  navigate: NavigateFunction
 }
 
 type AuthMachineEvents =
@@ -15,13 +15,13 @@ type AuthMachineEvents =
   | { type: 'LOG_OUT' }
 
 /** Manages app auth state on initial load. Also handles logging in, sighing up, and logging out. Some router dependencies are passed as arguments. */
-const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => void) =>
+const authMachine = (navigate: NavigateFunction, showToast: (toast: ToastType) => void) =>
   createMachine<AuthMachineContext, AuthMachineEvents>(
     {
       id: 'auth',
       initial: 'evaluatingSession',
       context: {
-        history,
+        navigate,
         user: undefined,
       },
       states: {
@@ -30,15 +30,15 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           always: [
             {
               cond: 'isLoggedIn',
-              target: 'authorized',
+              target: 'authenticated',
             },
             {
-              target: 'unauthorized',
+              target: 'unauthenticated',
             },
           ],
         },
 
-        unauthorized: {
+        unauthenticated: {
           entry: 'navigateToAuthPage',
           on: {
             LOGIN: 'loggingIn',
@@ -53,17 +53,17 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
               return logIn(event.username, event.password)
             },
             onDone: {
-              target: 'authorized',
+              target: 'authenticated',
               actions: ['navigateToDashboard'],
             },
             onError: {
-              target: 'unauthorized',
+              target: 'unauthenticated',
               actions: 'handleLoginFailure',
             },
           },
         },
 
-        authorized: {
+        authenticated: {
           on: {
             LOG_OUT: 'loggingOut',
           },
@@ -73,11 +73,11 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
           invoke: {
             src: logOut,
             onDone: {
-              target: 'unauthorized',
+              target: 'unauthenticated',
               actions: 'assignUserToCtx',
             },
             onError: {
-              target: 'authorized',
+              target: 'authenticated',
               actions: 'handleLogOutFailure',
             },
           },
@@ -92,11 +92,11 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
             // TODO: Boo any
             src: (_context, event: any) => signUp(event.username, event.email, event.password),
             onDone: {
-              target: 'authorized',
+              target: 'authenticated',
               actions: 'assignUserToCtx',
             },
             onError: {
-              target: 'unauthorized',
+              target: 'unauthenticated',
               actions: 'handleSignUpFailure',
             },
           },
@@ -106,15 +106,15 @@ const authMachine = (history: BrowserHistory, showToast: (toast: ToastType) => v
     {
       actions: {
         navigateToAuthPage: _ctx => {
-          return history.push('/auth')
+          return navigate('/auth')
         },
 
         navigateToDashboard: _ctx => {
-          return history.push('/memories')
+          return navigate('/memories')
         },
 
         navigateToSignUp: _ctx => {
-          return history.push('/sign-up')
+          return navigate('/sign-up')
         },
 
         assignUserToCtx: assign((_ctx: AuthMachineContext) => {

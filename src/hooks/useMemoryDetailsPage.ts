@@ -1,5 +1,5 @@
 import { useMachine } from '@xstate/react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { memoryDetailsPageMachine } from 'src/machines'
 import { useToast } from 'src/hooks'
 
@@ -9,9 +9,9 @@ type MemoryDetailsPageParams = {
 
 export function useMemoryDetailsPage() {
   const params = useParams<MemoryDetailsPageParams>()
-  const history = useHistory()
+  const navigate = useNavigate()
   const { showToast } = useToast()
-  const machine = memoryDetailsPageMachine(params, history, showToast)
+  const machine = memoryDetailsPageMachine(params, navigate, showToast)
 
   return useMachine(machine)
 }
