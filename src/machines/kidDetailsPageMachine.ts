@@ -1,7 +1,7 @@
 import { createMachine, assign } from 'xstate'
+import type { NavigateFunction } from 'react-router-dom'
 import { Kid } from 'src/types'
 import { deleteKid, getKid } from 'src/helpers/api'
-import { BrowserHistory } from 'history'
 
 // TODO:
 /**
@@ -25,7 +25,10 @@ type KidDetailsPageParams = {
   id?: string
 }
 
-const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history: BrowserHistory) =>
+const kidDetailsPageMachine = (
+  queryStringParams: KidDetailsPageParams,
+  navigate: NavigateFunction,
+) =>
   createMachine<KidDetailsPageMachineContext, KidDetailsPageEvents>(
     {
       id: 'kidDetailsPage',
@@ -110,7 +113,7 @@ const kidDetailsPageMachine = (queryStringParams: KidDetailsPageParams, history:
         setErrorToCtx: assign((_ctx, event) => {
           return { error: event }
         }),
-        redirectToKidsPage: () => history.push('/kids'),
+        redirectToKidsPage: () => navigate('/kids'),
       },
     },
   )

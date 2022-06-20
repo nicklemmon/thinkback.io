@@ -4,11 +4,11 @@ import { Box, Button, Link, HStack, List, ListItem } from 'src/components/chakra
 import { Container } from 'src/components'
 
 type HeaderProps = {
-  isAuthorized: boolean
+  authenticated: boolean
   onLogOut?: () => void
 }
 
-function Header({ isAuthorized, onLogOut }: HeaderProps) {
+function Header({ authenticated, onLogOut }: HeaderProps) {
   return (
     <Box
       as="header"
@@ -22,12 +22,12 @@ function Header({ isAuthorized, onLogOut }: HeaderProps) {
           fontWeight="700"
           textDecor="none"
           color="gray.100"
-          to={isAuthorized ? '/memories' : '/auth'}
+          to={authenticated ? '/memories' : '/auth'}
         >
           ThinkBack
         </Link>
 
-        {isAuthorized ? (
+        {authenticated ? (
           <Box as="nav">
             <HStack as={List}>
               <ListItem>

@@ -30,7 +30,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <DefaultLayout isAuthorized={false}>
+        <DefaultLayout authenticated={false}>
           <Page>
             <Page.Header>
               <Page.Title>Something went wrong</Page.Title>
@@ -39,8 +39,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
             <Page.Content>
               <VStack spacing={8}>
                 <p>
-                  Unfortunately, accidents happen. Something went wrong and will be reported to be
-                  fixed shortly.
+                  Unfortunately, accidents happen. Something went wrong and will be fixed shortly.
                 </p>
 
                 <Button level="primary" as="a" href="/">

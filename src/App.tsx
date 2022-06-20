@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import {
   AddKidPage,
   AddMemoryPage,
@@ -14,7 +14,7 @@ import {
 } from 'src/pages'
 import { isProd } from 'src/constants'
 import { DefaultLayout } from './layouts'
-import { ProtectedRoute } from 'src/components'
+import { RequireAuthenticated, RequireUnauthenticated } from 'src/components'
 import { useAuth } from './hooks'
 import { Providers } from './Providers'
 
@@ -28,88 +28,125 @@ export function App() {
 
 function AppContent() {
   const [state, send] = useAuth()
-  const authorized = state.matches('authorized')
+  const authenticated = state.matches('authenticated')
 
   return (
-    <DefaultLayout isAuthorized={authorized} onLogOut={() => send({ type: 'LOG_OUT' })}>
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to="/memories" />
-        </Route>
+    <DefaultLayout authenticated={authenticated} onLogOut={() => send({ type: 'LOG_OUT' })}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/memories" />} />
 
-        <Route path="/memories" exact>
-          <Redirect to="/memories/view/grid" />
-        </Route>
+        <Route path="/memories" element={<Navigate to="/memories/view/grid" />} />
 
-        <ProtectedRoute condition={!authorized} path="/auth" exact>
-          <LoginPage
-            handleLogin={(submitEvent: { username: string; password: string }) =>
-              send({
-                type: 'LOGIN',
-                username: submitEvent.username,
-                password: submitEvent.password,
-              })
-            }
-            isLoggingIn={state.matches('loggingIn')}
-          />
-        </ProtectedRoute>
+        <Route
+          path="/auth"
+          element={
+            <RequireUnauthenticated authenticated={authenticated}>
+              <LoginPage
+                handleLogin={(submitEvent: { username: string; password: string }) =>
+                  send({
+                    type: 'LOGIN',
+                    username: submitEvent.username,
+                    password: submitEvent.password,
+                  })
+                }
+                isLoggingIn={state.matches('loggingIn')}
+              />
+            </RequireUnauthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={!authorized} path="/sign-up">
-          <SignUpPage
-            handleSignUp={(submitEvent: { username: string; email: string; password: string }) => {
-              send({
-                type: 'SIGN_UP',
-                username: submitEvent.username,
-                email: submitEvent.email,
-                password: submitEvent.password,
-              })
-            }}
-            isSigningUp={state.matches('signingUp')}
-          />
-        </ProtectedRoute>
+        <Route
+          path="/sign-up"
+          element={
+            <RequireUnauthenticated authenticated={authenticated}>
+              <SignUpPage
+                handleSignUp={(submitEvent: {
+                  username: string
+                  email: string
+                  password: string
+                }) => {
+                  send({
+                    type: 'SIGN_UP',
+                    username: submitEvent.username,
+                    email: submitEvent.email,
+                    password: submitEvent.password,
+                  })
+                }}
+                isSigningUp={state.matches('signingUp')}
+              />
+            </RequireUnauthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={authorized} path="/kids" exact>
-          <KidsPage />
-        </ProtectedRoute>
+        <Route
+          path="/kids"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <KidsPage />
+            </RequireAuthenticated>
+          }
+        ></Route>
 
-        <ProtectedRoute condition={authorized} path="/kids/add">
-          <AddKidPage />
-        </ProtectedRoute>
+        <Route
+          path="/kids/add"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <AddKidPage />
+            </RequireAuthenticated>
+          }
+        ></Route>
 
-        <ProtectedRoute condition={authorized} path="/kids/:id">
-          <KidDetailsPage />
-        </ProtectedRoute>
+        <Route
+          path="/kids/:id"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <KidDetailsPage />
+            </RequireAuthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={authorized} path="/memories/view/:view">
-          <MemoriesPage />
-        </ProtectedRoute>
+        <Route
+          path="/memories/view/:view"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <MemoriesPage />
+            </RequireAuthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={authorized} path="/memories/add">
-          <AddMemoryPage />
-        </ProtectedRoute>
+        <Route
+          path="/memories/add"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <AddMemoryPage />
+            </RequireAuthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={authorized} path="/memories/:id">
-          <MemoryDetailsPage />
-        </ProtectedRoute>
+        <Route
+          path="/memories/:id"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <MemoryDetailsPage />
+            </RequireAuthenticated>
+          }
+        />
 
-        <ProtectedRoute condition={authorized} path="/profile">
-          <ProfilePage />
-        </ProtectedRoute>
+        <Route
+          path="/profile"
+          element={
+            <RequireAuthenticated authenticated={authenticated}>
+              <ProfilePage />
+            </RequireAuthenticated>
+          }
+        />
 
-        {!isProd ? (
-          <Route path="/throw-error">
-            <ThrowErrorPage />
-          </Route>
-        ) : null}
+        {!isProd ? <Route path="/throw-error" element={<ThrowErrorPage />} /> : null}
 
-        <Route path="/404">
-          <NotFoundPage />
-        </Route>
+        <Route path="/404" element={<NotFoundPage />} />
 
-        <Route>
-          <NotFoundPage />
-        </Route>
-      </Switch>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </DefaultLayout>
   )
 }

@@ -1,10 +1,11 @@
 import { useMachine } from '@xstate/react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { memoriesPageMachine } from 'src/machines'
 
 export function useMemoriesPage() {
-  const history = useHistory()
-  const machine = memoriesPageMachine(history)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const machine = memoriesPageMachine(navigate, location)
 
   return useMachine(machine)
 }
