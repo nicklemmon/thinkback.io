@@ -12,7 +12,7 @@
     "@testing-library/user-event": "14.2.1",
     "@types/jest": "27.5.2",
     "@types/node": "16.11.26",
-    "@types/react": "17.0.43",
+    "@types/react": "17.0.47",
     "@types/react-dom": "17.0.17",
     "@xstate/react": "2.0.1",
     "date-fns": "2.28.0",
