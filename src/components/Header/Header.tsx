@@ -10,13 +10,7 @@ type HeaderProps = {
 
 function Header({ authenticated, onLogOut }: HeaderProps) {
   return (
-    <Box
-      as="header"
-      borderBottom="1px solid"
-      borderColor="purple.100"
-      backgroundColor="gray.700"
-      color="gray.200"
-    >
+    <Box as="header" backgroundColor="gray.700" color="gray.200">
       <Container display="flex" alignItems="center" justifyContent="space-between">
         <Link
           fontWeight="700"
