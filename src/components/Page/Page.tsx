@@ -22,13 +22,15 @@ type PageContentProps = {
 }
 
 function Page({ children }: PageProps) {
-  return <Container>{children}</Container>
+  return <>{children}</>
 }
 
 function PageHeader({ children }: PageHeaderProps) {
   return (
-    <Box paddingTop="8" paddingBottom="3">
-      <VStack spacing={6}>{children}</VStack>
+    <Box paddingTop="8" paddingBottom="8" bg="gray.50">
+      <Container>
+        <VStack spacing={6}>{children}</VStack>
+      </Container>
     </Box>
   )
 }
@@ -42,7 +44,9 @@ function PageTitle({ children }: PageTitleProps) {
         <title>{children} | ThinkBack</title>
       </Helmet>
 
-      <Heading as="h1">{children}</Heading>
+      <Heading as="h1" fontSize={40} color="gray.700">
+        {children}
+      </Heading>
     </>
   )
 }
@@ -50,7 +54,7 @@ function PageTitle({ children }: PageTitleProps) {
 function PageContent({ children }: PageContentProps) {
   return (
     <Box paddingTop="8" paddingBottom="8">
-      {children}
+      <Container>{children}</Container>
     </Box>
   )
 }
