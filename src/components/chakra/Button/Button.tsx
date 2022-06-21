@@ -1,4 +1,4 @@
-import { Button as ChakraButton, forwardRef } from '@chakra-ui/react'
+import { Button as ChakraButton, EffectProps, forwardRef, StyleProps } from '@chakra-ui/react'
 import { ButtonProps as ChakraButtonProps } from '@chakra-ui/button'
 
 type ButtonLevel =
@@ -10,14 +10,16 @@ type ButtonLevel =
 
 // TODO: Ideally these would be types derived from Chakra somehow
 type LevelConfig = {
-  colorScheme: string
-  variant: string
+  colorScheme: ButtonProps['colorScheme']
+  variant: ButtonProps['variant']
+  shadow?: EffectProps['shadow']
 }
 
 const LEVEL_PROPS: Record<ButtonLevel, LevelConfig> = {
   primary: {
     colorScheme: 'purple',
     variant: 'solid',
+    shadow: 'base',
   },
   secondary: {
     colorScheme: 'purple',
@@ -30,6 +32,7 @@ const LEVEL_PROPS: Record<ButtonLevel, LevelConfig> = {
   'destructive-primary': {
     colorScheme: 'red',
     variant: 'solid',
+    shadow: 'base',
   },
   'destructive-secondary': {
     colorScheme: 'red',
