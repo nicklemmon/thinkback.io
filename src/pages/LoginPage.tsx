@@ -33,7 +33,7 @@ export function LoginPage({ handleLogin, isLoggingIn }: LoginProps) {
         <Page.Title>Login</Page.Title>
       </Page.Header>
 
-      <Page.Content>
+      <Page.Content breakout>
         <Card>
           <Box padding={6}>
             <Box maxW="3xl">

@@ -38,7 +38,7 @@ export function SignUpPage({ handleSignUp, isSigningUp }: SignUpProps) {
         <Page.Title>Sign Up</Page.Title>
       </Page.Header>
 
-      <Page.Content>
+      <Page.Content breakout>
         <Card>
           <Box padding={6}>
             <Box maxW="3xl">

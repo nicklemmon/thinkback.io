@@ -19,6 +19,7 @@ type PageTitleProps = {
 
 type PageContentProps = {
   children: React.ReactNode
+  breakout?: boolean
 }
 
 function Page({ children }: PageProps) {
@@ -51,10 +52,10 @@ function PageTitle({ children }: PageTitleProps) {
   )
 }
 
-function PageContent({ children }: PageContentProps) {
+function PageContent({ children, breakout }: PageContentProps) {
   return (
     <Box paddingTop="8" paddingBottom="8">
-      <Container>{children}</Container>
+      <Container transform={breakout ? 'translateY(-3.5rem);' : undefined}>{children}</Container>
     </Box>
   )
 }
