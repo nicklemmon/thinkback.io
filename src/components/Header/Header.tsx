@@ -12,17 +12,17 @@ function Header({ authenticated, onLogOut }: HeaderProps) {
   return (
     <Box as="header" backgroundColor="gray.700" color="gray.200">
       <Container display="flex" alignItems="center" justifyContent="space-between">
-        <Link
-          fontWeight="700"
-          textDecor="none"
-          color="gray.100"
-          to={authenticated ? '/memories' : '/auth'}
-        >
-          ThinkBack
-        </Link>
+        <Box as="nav" display="flex" gap={6}>
+          <Link
+            fontWeight="700"
+            textDecor="none"
+            color="gray.100"
+            to={authenticated ? '/memories' : '/auth'}
+          >
+            ☁️ thinkback.io
+          </Link>
 
-        {authenticated ? (
-          <Box as="nav">
+          {authenticated ? (
             <HStack as={List}>
               <ListItem>
                 <HeaderLink to="/memories">Memories</HeaderLink>
@@ -33,22 +33,20 @@ function Header({ authenticated, onLogOut }: HeaderProps) {
               <ListItem>
                 <HeaderLink to="/profile">Profile</HeaderLink>
               </ListItem>
-
-              {onLogOut ? (
-                <ListItem>
-                  <Button
-                    level="secondary"
-                    size="sm"
-                    colorScheme="whiteAlpha"
-                    color="white"
-                    onClick={onLogOut}
-                  >
-                    Log Out
-                  </Button>
-                </ListItem>
-              ) : null}
             </HStack>
-          </Box>
+          ) : null}
+        </Box>
+
+        {onLogOut ? (
+          <Button
+            level="secondary"
+            size="sm"
+            colorScheme="whiteAlpha"
+            color="white"
+            onClick={onLogOut}
+          >
+            Log Out
+          </Button>
         ) : null}
       </Container>
     </Box>
