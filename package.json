@@ -57,7 +57,7 @@
     "@types/parse": "3.0.4",
     "@types/react-helmet": "6.1.6",
     "@types/react-router-dom": "5.3.3",
-    "@vitejs/plugin-react": "4.0.0",
+    "@vitejs/plugin-react": "4.3.3",
     "vite": "4.3.9",
     "vite-tsconfig-paths": "4.2.0"
   }
